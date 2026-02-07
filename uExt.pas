@@ -3,12 +3,14 @@
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, System.Generics.Collections, ShellAPI, TlHelp32;
+  Winapi.Windows, System.SysUtils, TlHelp32;
 
 function RtlGetVersion(var RTL_OSVERSIONINFOEXW): LONG; stdcall; external 'ntdll.dll' Name 'RtlGetVersion';
 
 function Wow64DisableWow64FsRedirection(var OldValue: Pointer): BOOL; stdcall; external 'kernel32.dll';
 function Wow64RevertWow64FsRedirection(OldValue: Pointer): BOOL; stdcall; external 'kernel32.dll';
+
+procedure DisableWow64FsRedirection(const Proc: TProc);
 
 function IsExplorerRunning: Boolean;
 function IsExplorerUILoaded: Boolean;
@@ -20,8 +22,21 @@ var
 
 implementation
 
-uses
-  uMain.UI;
+procedure DisableWow64FsRedirection(const Proc: TProc);
+var
+  OldState: Pointer;
+  FsRedirDisabled: BOOL;
+begin
+  if not Assigned(Proc) then Exit;
+
+  FsRedirDisabled := Wow64DisableWow64FsRedirection(OldState);
+  try
+    Proc();
+  finally
+    if FsRedirDisabled then
+      Wow64RevertWow64FsRedirection(OldState);
+  end;
+end;
 
 function IsExplorerRunning: Boolean;
 var

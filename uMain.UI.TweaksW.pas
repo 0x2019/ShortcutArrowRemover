@@ -5,15 +5,15 @@ interface
 uses
   Winapi.Windows, System.SysUtils, Registry;
 
-function RemoveShortcutArrowsW(wOption: string): Boolean;
-function RemoveShortcutSuffixW(wOption: string): Boolean;
+function RemoveShortcutArrowsW(Enable: Boolean): Boolean;
+function RemoveShortcutSuffixW(Enable: Boolean): Boolean;
 
 implementation
 
 uses
   uExt;
 
-function RemoveShortcutArrowsW(wOption: string): Boolean;
+function RemoveShortcutArrowsW(Enable: Boolean): Boolean;
 const
   ROOT  = HKEY_CLASSES_ROOT;
   VALUE = 'IsShortcut';
@@ -32,11 +32,13 @@ var
   xReg: TRegistry;
   i: Integer;
 begin
-  Result := SameText(wOption, 'On');
+  Result := Enable;
+
   xReg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
   try
     xReg.RootKey := ROOT;
-    if SameText(wOption, 'On') then
+
+    if Enable then
     begin
       for i := Low(PATHS) to High(PATHS) do
       begin
@@ -53,7 +55,7 @@ begin
         end;
       end;
     end
-    else if SameText(wOption, 'Off') then
+    else
     begin
       for i := Low(PATHS) to High(PATHS) do
       begin
@@ -69,6 +71,7 @@ begin
           xReg.CloseKey;
         end;
       end;
+
       Result := False;
     end;
   finally
@@ -76,7 +79,7 @@ begin
   end;
 end;
 
-function RemoveShortcutSuffixW(wOption: string): Boolean;
+function RemoveShortcutSuffixW(Enable: Boolean): Boolean;
 const
   ROOT  = HKEY_CURRENT_USER;
   PATH  = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
@@ -85,19 +88,20 @@ var
   xReg: TRegistry;
   Data: Cardinal;
 begin
-  Result := SameText(wOption, 'On');
+  Result := Enable;
+
   xReg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
   try
     xReg.RootKey := ROOT;
     if xReg.OpenKey(PATH, True) then
     try
       try
-        if SameText(wOption, 'On') then
+        if Enable then
         begin
           Data := 0;
           xReg.WriteBinaryData(VALUE, Data, SizeOf(Data));
         end
-        else if SameText(wOption, 'Off') then
+        else
         begin
           // Windows 7: 16 00 00 00
           // Windows 10+: 1E 00 00 00
@@ -105,6 +109,7 @@ begin
             Data := $16
           else
             Data := $1E;
+
           xReg.WriteBinaryData(VALUE, Data, SizeOf(Data));
           Result := False;
         end;
@@ -115,7 +120,6 @@ begin
     finally
       xReg.CloseKey;
     end;
-
   finally
     xReg.Free;
   end;

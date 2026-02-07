@@ -3,10 +3,11 @@
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, Vcl.Forms, ShellAPI;
+  Winapi.Windows, System.SysUtils, ShellAPI;
 
 procedure UI_Init(AForm: TObject);
-procedure UI_Free(AForm: TObject);
+procedure UI_About(AForm: TObject);
+procedure UI_Exit(AForm: TObject);
 
 procedure UI_LoadTweaks(AForm: TObject);
 
@@ -16,7 +17,7 @@ procedure UI_RestartExplorerTimer(AForm: TObject);
 implementation
 
 uses
-  uMain, uMain.UI.TweaksR, uExt;
+  uExt, uMain, uMain.UI.Messages, uMain.UI.Strings, uMain.UI.TweaksR;
 
 procedure UI_Init(AForm: TObject);
 var
@@ -25,17 +26,31 @@ begin
   if not (AForm is TfrmMain) then Exit;
   F := TfrmMain(AForm);
 
+  F.Constraints.MinWidth := F.Width;
+  F.Constraints.MinHeight := F.Height;
+
   F.pnlSAR.OnMouseDown := F.DragForm;
   SetWindowPos(F.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE);
 end;
 
-procedure UI_Free(AForm: TObject);
+procedure UI_About(AForm: TObject);
 var
   F: TfrmMain;
 begin
   if not (AForm is TfrmMain) then Exit;
   F := TfrmMain(AForm);
-  F.tmrRestartExplorer.Enabled := False;
+
+  UI_MessageBoxCustom(F, Format(SAboutMsg, [APP_NAME, APP_VERSION, APP_RELEASE, APP_URL]), MB_OK);
+end;
+
+procedure UI_Exit(AForm: TObject);
+var
+  F: TfrmMain;
+begin
+  if not (AForm is TfrmMain) then Exit;
+  F := TfrmMain(AForm);
+
+  F.Close;
 end;
 
 procedure UI_LoadTweaks(AForm: TObject);
@@ -56,26 +71,20 @@ begin
   if not (AForm is TfrmMain) then Exit;
   F := TfrmMain(AForm);
 
-  PostMessage(F.Handle, mbMessage, 100, 0);
-  xMsgCaption := '';
-
-  if Application.MessageBox('Do you want to restart Windows Explorer?',
-                            xMsgCaption,
-                            MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = IDYES then
+  if UI_ConfirmYesNo(F, SRestartExplorerMsg) then
   begin
+    F.btnRestartExplorer.Enabled := False;
     IsRestartingExplorer := True;
     ShellExecute(0, 'open', 'taskkill', '/f /im explorer.exe', nil, SW_HIDE);
 
     F.tmrRestartExplorer.Interval := 1000;
-    F.tmrRestartExplorer.Enabled  := True;
+    F.tmrRestartExplorer.Enabled := True;
   end;
 end;
 
 procedure UI_RestartExplorerTimer(AForm: TObject);
 var
   F: TfrmMain;
-  OldFsRedirState: Pointer;
-  FsRedirDisabled: BOOL;
 begin
   if not (AForm is TfrmMain) then Exit;
   F := TfrmMain(AForm);
@@ -83,20 +92,26 @@ begin
   if IsExplorerUILoaded then
   begin
     F.tmrRestartExplorer.Enabled := False;
-    if IsRestartingExplorer then
-      IsRestartingExplorer := False;
+    F.btnRestartExplorer.Enabled := True;
+    IsRestartingExplorer := False;
     Exit;
   end;
 
   if not IsExplorerRunning then
   begin
-    FsRedirDisabled := Wow64DisableWow64FsRedirection(OldFsRedirState);
-    try
-      ShellExecute(F.Handle, 'open', 'explorer.exe', nil, nil, SW_SHOWNORMAL);
-    finally
-      if FsRedirDisabled then
-        Wow64RevertWow64FsRedirection(OldFsRedirState);
-    end;
+    DisableWow64FsRedirection(
+      procedure
+      var
+        R: HINST;
+      begin
+        R := ShellExecute(F.Handle, 'open', 'explorer.exe', nil, nil, SW_SHOWNORMAL);
+
+        if NativeInt(R) <= 32 then
+          UI_MessageBox(F,
+            Format(SRestartExplorerFailMsg, [NativeInt(R)]),
+            MB_ICONWARNING or MB_OK);
+      end
+    );
   end;
 end;
 
