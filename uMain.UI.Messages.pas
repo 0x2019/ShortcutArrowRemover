@@ -3,12 +3,11 @@
 interface
 
 uses
-  Winapi.Windows, Vcl.Forms;
+  Winapi.Windows, Winapi.Messages, Vcl.Forms;
 
 procedure UI_ChangeMessageBoxPosition(AForm: TObject);
 
 function UI_MessageBox(AForm: TObject; const Text: string; Flags: UINT; const Caption: string = ''): Integer;
-function UI_MessageBoxCustom(AForm: TObject; const Text: string; Flags: UINT; const Caption: string = ''): Integer;
 function UI_ConfirmYesNo(AForm: TObject; const Text: string; const Caption: string = ''): Boolean;
 function UI_ConfirmYesNoCancel(AForm: TObject; const Text: string; const Caption: string = ''): Integer;
 function UI_ConfirmYesNoWarn(AForm: TObject; const Text: string; const Caption: string = ''): Boolean;
@@ -27,6 +26,7 @@ var
   F: TfrmMain;
   mbHWND: HWND;
   mbRect: TRect;
+  mbStyle: NativeInt;
   x, y, w, h: Integer;
 begin
   if not (AForm is TfrmMain) then Exit;
@@ -34,6 +34,11 @@ begin
 
   mbHWND := FindWindow(MAKEINTRESOURCE(WC_DIALOG), xMsgCaption);
   if (mbHWND <> 0) then begin
+    mbStyle := GetWindowLongPtr(mbHWND, GWL_STYLE);
+    if (mbStyle and WS_SYSMENU) <> 0 then begin
+      SetWindowLongPtr(mbHWND, GWL_STYLE, mbStyle and (not WS_SYSMENU));
+      SetWindowPos(mbHWND, 0, 0, 0, 0, 0, SWP_FRAMECHANGED or SWP_NOMOVE or SWP_NOSIZE or SWP_NOZORDER or SWP_NOACTIVATE);
+    end;
     GetWindowRect(mbHWND, mbRect);
     with mbRect do begin
       w := Right - Left;
@@ -64,32 +69,6 @@ begin
   xMsgCaption := PWideChar(GCaption);
 
   Result := Application.MessageBox(PChar(Text), xMsgCaption, Flags);
-end;
-
-function UI_MessageBoxCustom(AForm: TObject; const Text: string; Flags: UINT; const Caption: string): Integer;
-var
-  F: TfrmMain;
-  Params: TMsgBoxParams;
-begin
-  Result := 0;
-  if not (AForm is TfrmMain) then Exit;
-  F := TfrmMain(AForm);
-
-  PostMessage(F.Handle, mbMessage, 0, 0);
-
-  GCaption := Caption;
-  xMsgCaption := PWideChar(GCaption);
-
-  ZeroMemory(@Params, SizeOf(Params));
-  Params.cbSize := SizeOf(Params);
-  Params.hwndOwner := F.Handle;
-  Params.hInstance := HInstance;
-  Params.lpszText := PChar(Text);
-  Params.lpszCaption := xMsgCaption;
-  Params.dwStyle := Flags or MB_USERICON;
-  Params.lpszIcon := 'MAINICON';
-
-  Result := MessageBoxIndirect(Params);
 end;
 
 function UI_ConfirmYesNo(AForm: TObject; const Text: string; const Caption: string): Boolean;
