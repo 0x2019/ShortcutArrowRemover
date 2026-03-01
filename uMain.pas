@@ -3,17 +3,12 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, sSkinManager, sSkinProvider,
-  Vcl.StdCtrls, sCheckBox, Vcl.ExtCtrls, sPanel, System.ImageList, Vcl.ImgList,
-  acAlphaImageList, Vcl.Buttons, sBitBtn, acAlphaHints;
+  Winapi.Windows, Winapi.Messages, System.Classes, System.SysUtils, Vcl.Buttons,
+  Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.ImgList, Vcl.StdCtrls,
+  sSkinManager, sSkinProvider, sCheckBox, sPanel, acAlphaImageList, sBitBtn,
+  acAlphaHints, System.ImageList,
 
-const
-  mbMessage = WM_USER + 1024;
-  APP_NAME    = 'Shortcut Arrow Remover';
-  APP_VERSION = 'v1.0.0.0';
-  APP_RELEASE = 'September 19, 2025';
-  APP_URL     = 'https://github.com/0x2019/ShortcutArrowRemover';
+  uExplorer, uForms, uMessageBox;
 
 type
   TfrmMain = class(TForm)
@@ -38,33 +33,25 @@ type
     procedure chkRSAClick(Sender: TObject);
     procedure chkRSSClick(Sender: TObject);
   private
-    procedure ChangeMessageBoxPosition(var Msg: TMessage); message mbMessage;
+    { Private declarations }
   public
+    procedure ChangeMessageBoxPosition(var Msg: TMessage); message mbMessage;
     procedure DragForm(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   end;
 
 var
   frmMain: TfrmMain;
-  xMsgCaption: PWideChar;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  uMain.UI,
-  uMain.UI.TweaksR, uMain.UI.TweaksW;
+  uAppController, uAppStrings, uTweaksW;
 
 procedure TfrmMain.btnAboutClick(Sender: TObject);
 begin
-  PostMessage(Handle, mbMessage, 0, 0);
-  xMsgCaption := '';
-
-  Application.MessageBox(
-  APP_NAME + ' ' + APP_VERSION + sLineBreak +
-  'c0ded by 龍, written in Delphi.' + sLineBreak + sLineBreak +
-  'Release Date: ' + APP_RELEASE + sLineBreak +
-  'URL: ' + APP_URL, xMsgCaption, MB_ICONQUESTION);
+  UI_MessageBox(Self, Format(SAboutMsg, [APP_NAME, APP_VERSION, APP_RELEASE, APP_URL]), MB_ICONQUESTION or MB_OK);
 end;
 
 procedure TfrmMain.btnExitClick(Sender: TObject);
@@ -74,63 +61,38 @@ end;
 
 procedure TfrmMain.btnRestartExplorerClick(Sender: TObject);
 begin
-  UI_RestartExplorer(Self);
+  App_RestartExplorer(Self);
 end;
 
 procedure TfrmMain.ChangeMessageBoxPosition(var Msg: TMessage);
-var
-  mbHWND: LongWord;
-  mbRect: TRect;
-  x, y, w, h: Integer;
 begin
-  mbHWND := FindWindow(MAKEINTRESOURCE(WC_DIALOG), xMsgCaption);
-  if (mbHWND <> 0) then begin
-    GetWindowRect(mbHWND, mbRect);
-  with mbRect do begin
-    w := Right - Left;
-    h := Bottom - Top;
-  end;
-  x := frmMain.Left + ((frmMain.Width - w) div 2);
-  if x < 0 then
-    x := 0
-    else if x + w > Screen.Width then x := Screen.Width - w;
-      y := frmMain.Top + ((frmMain.Height - h) div 2);
-  if y < 0 then y := 0
-    else if y + h > Screen.Height then y := Screen.Height - h;
-    SetWindowPos(mbHWND, 0, x, y, 0, 0, SWP_NOACTIVATE or SWP_NOSIZE or SWP_NOZORDER);
-  end;
+  UI_ChangeMessageBoxPosition(Self);
 end;
 
 procedure TfrmMain.DragForm(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if Button = mbLeft then
-  begin
-    ReleaseCapture;
-    SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-  end;
+  UI_DragForm(Self, Button);
 end;
 
 procedure TfrmMain.chkRSAClick(Sender: TObject);
 begin
-  if chkRSA.Checked then
-    RemoveShortcutArrowsW('On')
-  else
-    RemoveShortcutArrowsW('Off');
+  RemoveShortcutArrowsW(chkRSA.Checked);
 end;
 
 procedure TfrmMain.chkRSSClick(Sender: TObject);
 begin
-  if chkRSS.Checked then
-    RemoveShortcutSuffixW('On')
-  else
-    RemoveShortcutSuffixW('Off');
+  RemoveShortcutSuffixW(chkRSS.Checked);
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  UI_Init(Self);
-  UI_LoadTweaks(Self);
+  UI_SetMinConstraints(Self);
+  UI_SetAlwaysOnTop(Self, True);
+
+  pnlSAR.OnMouseDown := DragForm;
+
+  App_LoadTweaks(Self);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
@@ -142,7 +104,7 @@ end;
 
 procedure TfrmMain.tmrRestartExplorerTimer(Sender: TObject);
 begin
-  UI_RestartExplorerTimer(Self);
+  App_RestartExplorerTimer(Self);
 end;
 
 end.

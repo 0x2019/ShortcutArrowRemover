@@ -1,21 +1,18 @@
-﻿unit uMain.UI.TweaksR;
+﻿unit uTweaksR;
 
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, Vcl.Forms, Registry;
+  Winapi.Windows, Registry;
 
 function RemoveShortcutArrowsR: Boolean;
 function RemoveShortcutSuffixR: Boolean;
 
 implementation
 
-uses
-  uMain;
-
 function RemoveShortcutArrowsR: Boolean;
 const
-  ROOT  = HKEY_CLASSES_ROOT;
+  ROOT = HKEY_CLASSES_ROOT;
   VALUE = 'IsShortcut';
   PATHS: array[0..7] of string =
   (
@@ -29,63 +26,63 @@ const
     'WSHFile'
   );
 var
-  xReg: TRegistry;
+  Reg: TRegistry;
   i: Integer;
   Removed: Boolean;
 begin
   Removed := True;
-  xReg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
+  Reg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
   try
-    xReg.RootKey := ROOT;
+    Reg.RootKey := ROOT;
     for i := Low(PATHS) to High(PATHS) do
     begin
-      if xReg.OpenKeyReadOnly(PATHS[i]) then
+      if Reg.OpenKeyReadOnly(PATHS[i]) then
       try
-        if xReg.ValueExists(VALUE) then
+        if Reg.ValueExists(VALUE) then
         begin
           Removed := False;
           Break;
         end;
       finally
-        xReg.CloseKey;
+        Reg.CloseKey;
       end;
     end;
   finally
-    xReg.Free;
+    Reg.Free;
   end;
   Result := Removed;
 end;
 
 function RemoveShortcutSuffixR: Boolean;
 const
-  ROOT  = HKEY_CURRENT_USER;
-  PATH  = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
+  ROOT = HKEY_CURRENT_USER;
+  PATH = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
   VALUE = 'link';
 var
-  xReg: TRegistry;
+  Reg: TRegistry;
   Data: Cardinal;
   Removed: Boolean;
 begin
   Removed := False;
-  xReg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
+  Reg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
   try
-    xReg.RootKey := ROOT;
-    if xReg.OpenKeyReadOnly(PATH) then
+    Reg.RootKey := ROOT;
+    if Reg.OpenKeyReadOnly(PATH) then
     try
-      if xReg.ValueExists(VALUE) then
+      if Reg.ValueExists(VALUE) then
       begin
-        if (xReg.GetDataType(VALUE) = rdBinary) and
-           (xReg.GetDataSize(VALUE) = SizeOf(Data)) then
+        if (Reg.GetDataType(VALUE) = rdBinary) and
+           (Reg.GetDataSize(VALUE) = SizeOf(Data)) then
         begin
-          if xReg.ReadBinaryData(VALUE, Data, SizeOf(Data)) = SizeOf(Data) then
+          if Reg.ReadBinaryData(VALUE, Data, SizeOf(Data)) = SizeOf(Data) then
             Removed := (Data = 0);
         end;
       end;
     finally
-      xReg.CloseKey;
+      Reg.CloseKey;
     end;
   finally
-    xReg.Free;
+    Reg.Free;
   end;
   Result := Removed;
 end;

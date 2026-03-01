@@ -121,6 +121,8 @@
         <AppExecutionLevel>requireAdministrator</AppExecutionLevel>
         <Icon_MainIcon>ShortcutArrowRemover_Icon.ico</Icon_MainIcon>
         <VerInfo_Keys>CompanyName=;FileDescription=Shortcut Arrow Remover;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=Shortcut Arrow Remover;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
+        <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -133,10 +135,14 @@
             <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uExt.pas"/>
-        <DCCReference Include="uMain.UI.pas"/>
-        <DCCReference Include="uMain.UI.TweaksR.pas"/>
-        <DCCReference Include="uMain.UI.TweaksW.pas"/>
+        <DCCReference Include="uTweaksR.pas"/>
+        <DCCReference Include="uTweaksW.pas"/>
+        <DCCReference Include="uAppStrings.pas"/>
+        <DCCReference Include="Common\uMessageBox.pas"/>
+        <DCCReference Include="Common\uOSUtils.pas"/>
+        <DCCReference Include="Common\uExplorer.pas"/>
+        <DCCReference Include="uAppController.pas"/>
+        <DCCReference Include="Common\uForms.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

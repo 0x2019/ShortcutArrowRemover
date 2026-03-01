@@ -1,21 +1,18 @@
-﻿unit uMain.UI.TweaksW;
+﻿unit uTweaksW;
 
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, Registry;
+  Winapi.Windows, System.SysUtils, Registry, uOSUtils;
 
-function RemoveShortcutArrowsW(wOption: string): Boolean;
-function RemoveShortcutSuffixW(wOption: string): Boolean;
+function RemoveShortcutArrowsW(AOption: Boolean): Boolean;
+function RemoveShortcutSuffixW(AOption: Boolean): Boolean;
 
 implementation
 
-uses
-  uExt;
-
-function RemoveShortcutArrowsW(wOption: string): Boolean;
+function RemoveShortcutArrowsW(AOption: Boolean): Boolean;
 const
-  ROOT  = HKEY_CLASSES_ROOT;
+  ROOT = HKEY_CLASSES_ROOT;
   VALUE = 'IsShortcut';
   PATHS: array[0..7] of string =
   (
@@ -29,95 +26,97 @@ const
     'WSHFile'
   );
 var
-  xReg: TRegistry;
+  Reg: TRegistry;
   i: Integer;
 begin
-  Result := SameText(wOption, 'On');
-  xReg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
+  Result := AOption;
+
+  Reg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
   try
-    xReg.RootKey := ROOT;
-    if SameText(wOption, 'On') then
+    Reg.RootKey := ROOT;
+
+    if AOption then
     begin
       for i := Low(PATHS) to High(PATHS) do
       begin
-        if xReg.OpenKey(PATHS[i], True) then
+        if Reg.OpenKey(PATHS[i], True) then
         try
           try
-            xReg.DeleteValue(VALUE);
+            Reg.DeleteValue(VALUE);
           except
             on E: Exception do
               OutputDebugString(PChar('DeleteValue failed at ' + PATHS[i] + ': ' + E.Message));
           end;
         finally
-          xReg.CloseKey;
+          Reg.CloseKey;
         end;
       end;
     end
-    else if SameText(wOption, 'Off') then
+    else
     begin
       for i := Low(PATHS) to High(PATHS) do
       begin
-        if xReg.OpenKey(PATHS[i], True) then
+        if Reg.OpenKey(PATHS[i], True) then
         try
           try
-            xReg.WriteString(VALUE, '');
+            Reg.WriteString(VALUE, '');
           except
             on E: Exception do
               OutputDebugString(PChar('WriteString failed at ' + PATHS[i] + ': ' + E.Message));
           end;
         finally
-          xReg.CloseKey;
+          Reg.CloseKey;
         end;
       end;
+
       Result := False;
     end;
   finally
-    xReg.Free;
+    Reg.Free;
   end;
 end;
 
-function RemoveShortcutSuffixW(wOption: string): Boolean;
+function RemoveShortcutSuffixW(AOption: Boolean): Boolean;
 const
   ROOT  = HKEY_CURRENT_USER;
   PATH  = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
   VALUE = 'link';
 var
-  xReg: TRegistry;
+  Reg: TRegistry;
   Data: Cardinal;
 begin
-  Result := SameText(wOption, 'On');
-  xReg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
+  Result := AOption;
+
+  Reg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
   try
-    xReg.RootKey := ROOT;
-    if xReg.OpenKey(PATH, True) then
+    Reg.RootKey := ROOT;
+    if Reg.OpenKey(PATH, True) then
     try
       try
-        if SameText(wOption, 'On') then
+        if AOption then
         begin
           Data := 0;
-          xReg.WriteBinaryData(VALUE, Data, SizeOf(Data));
         end
-        else if SameText(wOption, 'Off') then
+        else
         begin
           // Windows 7: 16 00 00 00
           // Windows 10+: 1E 00 00 00
-          if IsWindowsVersionLower(10, 0, 0) then
-            Data := $16
+          if IsWindowsVersionOrGreater(10, 0, 0) then
+            Data := $1E
           else
-            Data := $1E;
-          xReg.WriteBinaryData(VALUE, Data, SizeOf(Data));
-          Result := False;
+            Data := $16;
         end;
+
+        Reg.WriteBinaryData(VALUE, Data, SizeOf(Data));
       except
         on E: Exception do
           OutputDebugString(PChar('WriteBinaryData failed at ' + PATH + '\' + VALUE + ': ' + E.Message));
       end;
     finally
-      xReg.CloseKey;
+      Reg.CloseKey;
     end;
-
   finally
-    xReg.Free;
+    Reg.Free;
   end;
 end;
 
