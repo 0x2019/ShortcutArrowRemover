@@ -47,21 +47,21 @@ implementation
 {$R *.dfm}
 
 uses
-  uAppController, uAppStrings, uTweaksW;
+  uAppController, uAppStrings;
 
 procedure TfrmMain.btnAboutClick(Sender: TObject);
 begin
-  UI_MessageBox(Self, Format(SAboutMsg, [APP_NAME, APP_VERSION, APP_RELEASE, APP_URL]), MB_ICONQUESTION or MB_OK);
+  AppController_About(Self);
 end;
 
 procedure TfrmMain.btnExitClick(Sender: TObject);
 begin
-  Close;
+  AppController_Exit(Self);
 end;
 
 procedure TfrmMain.btnRestartExplorerClick(Sender: TObject);
 begin
-  App_RestartExplorer(Self);
+  AppController_RestartExplorer(Self);
 end;
 
 procedure TfrmMain.ChangeMessageBoxPosition(var Msg: TMessage);
@@ -77,12 +77,12 @@ end;
 
 procedure TfrmMain.chkRSAClick(Sender: TObject);
 begin
-  RemoveShortcutArrowsW(chkRSA.Checked);
+  AppController_ToggleShortcutArrows(Self);
 end;
 
 procedure TfrmMain.chkRSSClick(Sender: TObject);
 begin
-  RemoveShortcutSuffixW(chkRSS.Checked);
+  AppController_ToggleShortcutSuffix(Self);
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -92,19 +92,19 @@ begin
 
   pnlSAR.OnMouseDown := DragForm;
 
-  App_LoadTweaks(Self);
+  AppController_LoadTweaks(Self);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
-    Close;
+  AppController_Exit(Self);
 end;
 
 procedure TfrmMain.tmrRestartExplorerTimer(Sender: TObject);
 begin
-  App_RestartExplorerTimer(Self);
+  AppController_RestartExplorerTimer(Self);
 end;
 
 end.

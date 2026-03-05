@@ -3,60 +3,54 @@
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, ShellAPI;
+  Winapi.Windows, System.SysUtils, ShellAPI, uMain;
 
-procedure App_LoadTweaks(AForm: TObject);
+procedure AppController_LoadTweaks(AForm: TfrmMain);
+procedure AppController_RestartExplorer(AForm: TfrmMain);
+procedure AppController_RestartExplorerTimer(AForm: TfrmMain);
 
-procedure App_RestartExplorer(AForm: TObject);
-procedure App_RestartExplorerTimer(AForm: TObject);
+procedure AppController_About(AForm: TfrmMain);
+procedure AppController_Exit(AForm: TfrmMain);
+procedure AppController_ToggleShortcutArrows(AForm: TfrmMain);
+procedure AppController_ToggleShortcutSuffix(AForm: TfrmMain);
 
 implementation
 
 uses
-  uAppStrings, uMain, uTweaksR,
-  uExplorer, uMessageBox, uOSUtils;
+  uExplorer, uMessageBox, uOSUtils,
+  uAppStrings, uTweaksR, uTweaksW;
 
-procedure App_LoadTweaks(AForm: TObject);
-var
-  F: TfrmMain;
+procedure AppController_LoadTweaks(AForm: TfrmMain);
 begin
-  if not (AForm is TfrmMain) then Exit;
-  F := TfrmMain(AForm);
-
-  F.chkRSA.Checked := RemoveShortcutArrowsR;
-  F.chkRSS.Checked := RemoveShortcutSuffixR;
+  if AForm = nil then Exit;
+  AForm.chkRSA.Checked := RemoveShortcutArrowsR;
+  AForm.chkRSS.Checked := RemoveShortcutSuffixR;
 end;
 
-procedure App_RestartExplorer(AForm: TObject);
-var
-  F: TfrmMain;
+procedure AppController_RestartExplorer(AForm: TfrmMain);
 begin
-  if not (AForm is TfrmMain) then Exit;
-  F := TfrmMain(AForm);
+  if AForm = nil then Exit;
 
-  if UI_ConfirmYesNo(F, SRestartExplorerMsg) then
+  if UI_ConfirmYesNo(AForm, SRestartExplorerMsg) then
   begin
-    F.btnRestartExplorer.Enabled := False;
+    AForm.btnRestartExplorer.Enabled := False;
     IsRestartingExplorer := True;
 
     ShellExecute(0, 'open', 'taskkill', '/f /im explorer.exe', nil, SW_HIDE);
 
-    F.tmrRestartExplorer.Interval := 1000;
-    F.tmrRestartExplorer.Enabled := True;
+    AForm.tmrRestartExplorer.Interval := 1000;
+    AForm.tmrRestartExplorer.Enabled := True;
   end;
 end;
 
-procedure App_RestartExplorerTimer(AForm: TObject);
-var
-  F: TfrmMain;
+procedure AppController_RestartExplorerTimer(AForm: TfrmMain);
 begin
-  if not (AForm is TfrmMain) then Exit;
-  F := TfrmMain(AForm);
+  if AForm = nil then Exit;
 
   if IsExplorerUILoaded then
   begin
-    F.tmrRestartExplorer.Enabled := False;
-    F.btnRestartExplorer.Enabled := True;
+    AForm.tmrRestartExplorer.Enabled := False;
+    AForm.btnRestartExplorer.Enabled := True;
     IsRestartingExplorer := False;
     Exit;
   end;
@@ -66,17 +60,39 @@ begin
     DisableWow64FsRedirection(
       procedure
       var
-        R: HINST;
+        R: NativeInt;
       begin
-        R := ShellExecute(F.Handle, 'open', 'explorer.exe', nil, nil, SW_SHOWNORMAL);
+        R := NativeInt(ShellExecute(AForm.Handle, 'open', 'explorer.exe', nil, nil, SW_SHOWNORMAL));
 
-        if NativeInt(R) <= 32 then
-          UI_MessageBox(F,
-            Format(SRestartExplorerFailMsg, [NativeInt(R)]),
-            MB_ICONWARNING or MB_OK);
+        if R <= 32 then
+          UI_MessageBox(AForm, Format(SRestartExplorerFailMsg, [R]), MB_ICONWARNING or MB_OK);
       end
     );
   end;
+end;
+
+procedure AppController_About(AForm: TfrmMain);
+begin
+  if AForm = nil then Exit;
+  UI_MessageBox(AForm, Format(SAboutMsg, [APP_NAME, APP_VERSION, APP_RELEASE, APP_URL]), MB_ICONQUESTION or MB_OK);
+end;
+
+procedure AppController_Exit(AForm: TfrmMain);
+begin
+  if AForm = nil then Exit;
+  AForm.Close;
+end;
+
+procedure AppController_ToggleShortcutArrows(AForm: TfrmMain);
+begin
+  if AForm = nil then Exit;
+  RemoveShortcutArrowsW(AForm.chkRSA.Checked);
+end;
+
+procedure AppController_ToggleShortcutSuffix(AForm: TfrmMain);
+begin
+  if AForm = nil then Exit;
+  RemoveShortcutSuffixW(AForm.chkRSS.Checked);
 end;
 
 end.

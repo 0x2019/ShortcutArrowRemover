@@ -123,6 +123,7 @@
         <VerInfo_Keys>CompanyName=;FileDescription=Shortcut Arrow Remover;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=Shortcut Arrow Remover;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
+        <DCC_UnitSearchPath>..\Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -135,14 +136,14 @@
             <Form>frmMain</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uAppController.pas"/>
+        <DCCReference Include="uAppStrings.pas"/>
         <DCCReference Include="uTweaksR.pas"/>
         <DCCReference Include="uTweaksW.pas"/>
-        <DCCReference Include="uAppStrings.pas"/>
-        <DCCReference Include="Common\uMessageBox.pas"/>
-        <DCCReference Include="Common\uOSUtils.pas"/>
-        <DCCReference Include="Common\uExplorer.pas"/>
-        <DCCReference Include="uAppController.pas"/>
-        <DCCReference Include="Common\uForms.pas"/>
+        <DCCReference Include="..\Common\uExplorer.pas"/>
+        <DCCReference Include="..\Common\uForms.pas"/>
+        <DCCReference Include="..\Common\uMessageBox.pas"/>
+        <DCCReference Include="..\Common\uOSUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -166,6 +167,8 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k290.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp290.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
