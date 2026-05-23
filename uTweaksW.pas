@@ -3,14 +3,14 @@
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, Registry, uOSUtils;
+  Winapi.Windows, uOSUtils, uRegUtils;
 
-function RemoveShortcutArrowsW(AOption: Boolean): Boolean;
-function RemoveShortcutSuffixW(AOption: Boolean): Boolean;
+function RemoveShortcutArrowsW(Option: Boolean): Boolean;
+function RemoveShortcutSuffixW(Option: Boolean): Boolean;
 
 implementation
 
-function RemoveShortcutArrowsW(AOption: Boolean): Boolean;
+function RemoveShortcutArrowsW(Option: Boolean): Boolean;
 const
   ROOT = HKEY_CLASSES_ROOT;
   VALUE = 'IsShortcut';
@@ -26,98 +26,40 @@ const
     'WSHFile'
   );
 var
-  Reg: TRegistry;
   i: Integer;
 begin
-  Result := AOption;
+  Result := Option;
 
-  Reg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
-  try
-    Reg.RootKey := ROOT;
-
-    if AOption then
-    begin
-      for i := Low(PATHS) to High(PATHS) do
-      begin
-        if Reg.OpenKey(PATHS[i], True) then
-        try
-          try
-            Reg.DeleteValue(VALUE);
-          except
-            on E: Exception do
-              OutputDebugString(PChar('DeleteValue failed at ' + PATHS[i] + ': ' + E.Message));
-          end;
-        finally
-          Reg.CloseKey;
-        end;
-      end;
-    end
+  for i := Low(PATHS) to High(PATHS) do
+    if Option then
+      DeleteRegValue(ROOT, PATHS[i], VALUE)
     else
-    begin
-      for i := Low(PATHS) to High(PATHS) do
-      begin
-        if Reg.OpenKey(PATHS[i], True) then
-        try
-          try
-            Reg.WriteString(VALUE, '');
-          except
-            on E: Exception do
-              OutputDebugString(PChar('WriteString failed at ' + PATHS[i] + ': ' + E.Message));
-          end;
-        finally
-          Reg.CloseKey;
-        end;
-      end;
-
-      Result := False;
-    end;
-  finally
-    Reg.Free;
-  end;
+      WriteRegString(ROOT, PATHS[i], VALUE, '');
 end;
 
-function RemoveShortcutSuffixW(AOption: Boolean): Boolean;
+function RemoveShortcutSuffixW(Option: Boolean): Boolean;
 const
-  ROOT  = HKEY_CURRENT_USER;
-  PATH  = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
+  ROOT = HKEY_CURRENT_USER;
+  PATH = 'Software\Microsoft\Windows\CurrentVersion\Explorer';
   VALUE = 'link';
 var
-  Reg: TRegistry;
   Data: Cardinal;
 begin
-  Result := AOption;
+  Result := Option;
 
-  Reg := TRegistry.Create(KEY_ALL_ACCESS or KEY_WOW64_64KEY);
-  try
-    Reg.RootKey := ROOT;
-    if Reg.OpenKey(PATH, True) then
-    try
-      try
-        if AOption then
-        begin
-          Data := 0;
-        end
-        else
-        begin
-          // Windows 7: 16 00 00 00
-          // Windows 10+: 1E 00 00 00
-          if IsWindowsVersionOrGreater(10, 0, 0) then
-            Data := $1E
-          else
-            Data := $16;
-        end;
-
-        Reg.WriteBinaryData(VALUE, Data, SizeOf(Data));
-      except
-        on E: Exception do
-          OutputDebugString(PChar('WriteBinaryData failed at ' + PATH + '\' + VALUE + ': ' + E.Message));
-      end;
-    finally
-      Reg.CloseKey;
-    end;
-  finally
-    Reg.Free;
+  if Option then
+    Data := 0
+  else
+  begin
+    // Windows 7: 16 00 00 00
+    // Windows 10+: 1E 00 00 00
+    if IsWindowsVersionOrGreater(10, 0, 0) then
+      Data := $1E
+    else
+      Data := $16;
   end;
+
+  WriteRegBinary(ROOT, PATH, VALUE, Data);
 end;
 
 end.

@@ -11,7 +11,8 @@ uses
   uExplorer in '..\Common\uExplorer.pas',
   uForms in '..\Common\uForms.pas',
   uMessageBox in '..\Common\uMessageBox.pas',
-  uOSUtils in '..\Common\uOSUtils.pas';
+  uOSUtils in '..\Common\uOSUtils.pas',
+  uRegUtils in '..\Common\uRegUtils.pas';
 
 var
   uMutex: THandle;

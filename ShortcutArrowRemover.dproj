@@ -144,6 +144,7 @@
         <DCCReference Include="..\Common\uForms.pas"/>
         <DCCReference Include="..\Common\uMessageBox.pas"/>
         <DCCReference Include="..\Common\uOSUtils.pas"/>
+        <DCCReference Include="..\Common\uRegUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
