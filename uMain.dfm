@@ -1,4 +1,5 @@
 object frmMain: TfrmMain
+  Tag = 99
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
@@ -33,6 +34,7 @@ object frmMain: TfrmMain
     SkinData.SkinSection = 'TOOLBUTTON'
   end
   object pnlSAR: TsPanel
+    Tag = 99
     Left = 0
     Top = 5
     Width = 314

@@ -36,7 +36,6 @@ type
     { Private declarations }
   public
     procedure ChangeMessageBoxPosition(var Msg: TMessage); message mbMessage;
-    procedure DragForm(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   end;
 
 var
@@ -69,12 +68,6 @@ begin
   UI_ChangeMessageBoxPosition(Self);
 end;
 
-procedure TfrmMain.DragForm(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  UI_DragForm(Self, Button);
-end;
-
 procedure TfrmMain.chkRSAClick(Sender: TObject);
 begin
   AppController_ToggleShortcutArrows(Self);
@@ -88,9 +81,8 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   UI_SetMinConstraints(Self);
+  UI_EnableDragForm(Self);
   UI_SetAlwaysOnTop(Self, True);
-
-  pnlSAR.OnMouseDown := DragForm;
 
   AppController_LoadTweaks(Self);
 end;
