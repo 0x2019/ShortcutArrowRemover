@@ -137,6 +137,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uAppController.pas"/>
+        <DCCReference Include="uAppLog.pas"/>
         <DCCReference Include="uAppStrings.pas"/>
         <DCCReference Include="uTweaksR.pas"/>
         <DCCReference Include="uTweaksW.pas"/>
@@ -144,6 +145,7 @@
         <DCCReference Include="..\Common\uForms.pas"/>
         <DCCReference Include="..\Common\uMessageBox.pas"/>
         <DCCReference Include="..\Common\uOSUtils.pas"/>
+        <DCCReference Include="..\Common\uRichEdit.pas"/>
         <DCCReference Include="..\Common\uRegUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

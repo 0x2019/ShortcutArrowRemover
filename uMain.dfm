@@ -5,8 +5,8 @@ object frmMain: TfrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Shortcut Arrow Remover'
-  ClientHeight = 88
-  ClientWidth = 314
+  ClientHeight = 217
+  ClientWidth = 499
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object frmMain: TfrmMain
   OnKeyDown = FormKeyDown
   TextHeight = 13
   object btnRestartExplorer: TsBitBtn
-    Left = 0
-    Top = 62
+    Left = 184
+    Top = 191
     Width = 142
     Height = 25
     Caption = 'Restart &Explorer'
@@ -28,7 +28,7 @@ object frmMain: TfrmMain
     Images = sAlphaImageList
     ParentShowHint = False
     ShowHint = False
-    TabOrder = 1
+    TabOrder = 2
     TabStop = False
     OnClick = btnRestartExplorerClick
     SkinData.SkinSection = 'TOOLBUTTON'
@@ -37,7 +37,7 @@ object frmMain: TfrmMain
     Tag = 99
     Left = 0
     Top = 5
-    Width = 314
+    Width = 498
     Height = 52
     TabOrder = 0
     object chkRSS: TsCheckBox
@@ -74,8 +74,8 @@ object frmMain: TfrmMain
     end
   end
   object btnExit: TsBitBtn
-    Left = 234
-    Top = 62
+    Left = 418
+    Top = 191
     Width = 80
     Height = 25
     Caption = 'E&xit'
@@ -83,14 +83,14 @@ object frmMain: TfrmMain
     Images = sCharImageList
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 3
+    TabOrder = 4
     TabStop = False
     OnClick = btnExitClick
     SkinData.SkinSection = 'TOOLBUTTON'
   end
   object btnAbout: TsBitBtn
-    Left = 148
-    Top = 62
+    Left = 332
+    Top = 191
     Width = 80
     Height = 25
     Caption = '&About'
@@ -98,10 +98,30 @@ object frmMain: TfrmMain
     Images = sCharImageList
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 2
+    TabOrder = 3
     TabStop = False
     OnClick = btnAboutClick
     SkinData.SkinSection = 'TOOLBUTTON'
+  end
+  object redLog: TsRichEdit
+    Left = 0
+    Top = 63
+    Width = 498
+    Height = 122
+    Cursor = crArrow
+    Color = clWhite
+    EnableURLs = True
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ParentShowHint = False
+    ReadOnly = True
+    ScrollBars = ssVertical
+    ShowHint = False
+    TabOrder = 1
   end
   object sSkinProvider: TsSkinProvider
     ShowAppIcon = False
@@ -116,8 +136,8 @@ object frmMain: TfrmMain
     SkinData.SkinManager = sSkinManager
     SkinData.SkinSection = 'FORM'
     TitleButtons = <>
-    Left = 32
-    Top = 104
+    Left = 56
+    Top = 112
   end
   object sSkinManager: TsSkinManager
     AnimEffects.BlendOnMoving.Active = True
@@ -1964,7 +1984,7 @@ object frmMain: TfrmMain
     ThirdParty.ThirdScrollBar = ' '
     ThirdParty.ThirdStaticText = ' '
     ThirdParty.ThirdNativePaint = ' '
-    Left = 64
+    Left = 96
     Top = 112
   end
   object sAlphaImageList: TsAlphaImageList
@@ -14101,8 +14121,8 @@ object frmMain: TfrmMain
           FFFF0000FFFF000003C0000003C000000000000000000000E0070000FE3F0000
           FE3F0000F81F0000F81F55FFF81F51FFF81F4CFFFFFF40FFFFFF2DFF}
       end>
-    Left = 65534
-    Top = 109
+    Left = 134
+    Top = 117
     Bitmap = {}
   end
   object sAlphaHints: TsAlphaHints
@@ -14259,13 +14279,13 @@ object frmMain: TfrmMain
     TextAlignment = taLeftJustify
     HTMLMode = True
     SkinSection = 'HINT'
-    Left = 95
-    Top = 113
+    Left = 175
+    Top = 105
   end
   object tmrRestartExplorer: TTimer
     OnTimer = tmrRestartExplorerTimer
-    Left = 186
-    Top = 15
+    Left = 274
+    Top = 111
   end
   object sCharImageList: TsCharImageList
     EmbeddedFonts = <
@@ -14282,8 +14302,8 @@ object frmMain: TfrmMain
         ScalingFactor = 0.800000000000000000
         Char = 61584
       end>
-    Left = 165
-    Top = 15
+    Left = 229
+    Top = 111
     Bitmap = {}
   end
 end

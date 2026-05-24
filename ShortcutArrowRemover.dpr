@@ -5,6 +5,7 @@ uses
   Vcl.Forms,
   uMain in 'uMain.pas' {frmMain},
   uAppController in 'uAppController.pas',
+  uAppLog in 'uAppLog.pas',
   uAppStrings in 'uAppStrings.pas',
   uTweaksR in 'uTweaksR.pas',
   uTweaksW in 'uTweaksW.pas',
@@ -12,6 +13,7 @@ uses
   uForms in '..\Common\uForms.pas',
   uMessageBox in '..\Common\uMessageBox.pas',
   uOSUtils in '..\Common\uOSUtils.pas',
+  uRichEdit in '..\Common\uRichEdit.pas',
   uRegUtils in '..\Common\uRegUtils.pas';
 
 var

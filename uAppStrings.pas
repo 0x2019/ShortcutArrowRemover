@@ -8,8 +8,15 @@ resourcestring
   APP_RELEASE                         = 'September 19, 2025';
   APP_URL                             = 'https://github.com/0x2019/ShortcutArrowRemover';
 
+  SLogOSVersion                       = 'OS: %s';
+
   SRestartExplorerMsg                 = 'Do you want to restart Windows Explorer?';
-  SRestartExplorerFailMsg             = 'Failed to start Windows Explorer.' + sLineBreak + 'Error code: %d';
+
+  SLogExplorerRestarting              = 'Restarting Windows Explorer...';
+  SLogExplorerTerminated              = 'Terminated %s (PID: %d)';
+  SLogExplorerStarted                 = 'Started %s (PID: %d)';
+  SLogExplorerFailedToStart           = 'Failed to start Windows Explorer (Error code: %d)';
+  SLogExplorerRestartCompleted        = 'Windows Explorer restarted successfully.';
 
   SAboutMsg                           = '%s %s' + sLineBreak +
                                         'c0ded by 龍, written in Delphi.' + sLineBreak + sLineBreak +

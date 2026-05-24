@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.Classes, System.SysUtils, Vcl.Buttons,
   Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.ImgList, Vcl.StdCtrls,
   sSkinManager, sSkinProvider, sCheckBox, sPanel, acAlphaImageList, sBitBtn,
-  acAlphaHints, System.ImageList,
+  acAlphaHints, System.ImageList, Vcl.ComCtrls, sRichEdit,
 
   uExplorer, uForms, uMessageBox;
 
@@ -24,6 +24,7 @@ type
     sAlphaHints: TsAlphaHints;
     tmrRestartExplorer: TTimer;
     sCharImageList: TsCharImageList;
+    redLog: TsRichEdit;
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -84,7 +85,7 @@ begin
   UI_EnableDragForm(Self);
   UI_SetAlwaysOnTop(Self, True);
 
-  AppController_LoadTweaks(Self);
+  AppController_Init(Self);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
