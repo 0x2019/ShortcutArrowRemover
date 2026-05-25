@@ -138,7 +138,9 @@
         </DCCReference>
         <DCCReference Include="uAppController.pas"/>
         <DCCReference Include="uAppLog.pas"/>
+        <DCCReference Include="uAppSettings.pas"/>
         <DCCReference Include="uAppStrings.pas"/>
+        <DCCReference Include="uTweaks.Consts.pas"/>
         <DCCReference Include="uTweaksR.pas"/>
         <DCCReference Include="uTweaksW.pas"/>
         <DCCReference Include="..\Common\uExplorer.pas"/>

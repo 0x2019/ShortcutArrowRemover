@@ -18,10 +18,20 @@ resourcestring
   SLogExplorerFailedToStart           = 'Failed to start Windows Explorer (Error code: %d)';
   SLogExplorerRestartCompleted        = 'Windows Explorer restarted successfully.';
 
+  SLogEnabled                         = '%s enabled.';
+  SLogDisabled                        = '%s disabled.';
+
   SAboutMsg                           = '%s %s' + sLineBreak +
                                         'c0ded by 龍, written in Delphi.' + sLineBreak + sLineBreak +
                                         'Release Date: %s' + sLineBreak +
                                         'URL: %s';
+
+const
+  SRegDebug                           = '[DEBUG]';
+  SRegDebugPath                       = 'Path: ';
+  SRegDebugValue                      = 'Value: ';
+  SRegDebugType                       = 'Type: ';
+  SRegDebugData                       = 'Data: ';
 
 implementation
 

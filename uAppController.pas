@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, System.SysUtils, ShellAPI, uMain,
 
-  uExplorer, uMessageBox, uOSUtils, uProcessUtils;
+  uExplorer, uMessageBox, uOSUtils, uProcessUtils, uRegUtils;
 
 procedure AppController_Init(F: TfrmMain);
 procedure AppController_LoadTweaks(F: TfrmMain);
@@ -14,28 +14,70 @@ procedure AppController_RestartExplorerTimer(F: TfrmMain);
 
 procedure AppController_About(F: TfrmMain);
 procedure AppController_Exit(F: TfrmMain);
+
+procedure AppController_ToggleDebug(F: TfrmMain);
 procedure AppController_ToggleShortcutArrows(F: TfrmMain);
 procedure AppController_ToggleShortcutSuffix(F: TfrmMain);
 
 implementation
 
 uses
-  uAppStrings, uAppLog,
-  uTweaksR, uTweaksW;
+  uAppStrings, uAppLog, uAppSettings,
+  uTweaks.Consts, uTweaksR, uTweaksW;
+
+var
+  IsLoadingTweaks: Boolean = False;
+
+procedure AppController_UpdateDebugLog(F: TfrmMain);
+begin
+  if (F <> nil) and IsRegDebugEnabled then
+    SetRegDebugLogProc(
+      procedure(const Msg: string)
+      begin
+        AppLog_Info(F.redLog, Msg);
+      end
+    )
+  else
+    SetRegDebugLogProc(nil);
+end;
+
+procedure AppController_Debug(F: TfrmMain; const TweakName: string; const Enabled: Boolean; const Disabled: Boolean = True);
+begin
+  if F = nil then
+    Exit;
+
+  if (not Enabled) and (not Disabled) then
+    Exit;
+
+  AppLog_Info(F.redLog, TweakName, Enabled);
+end;
 
 procedure AppController_Init(F: TfrmMain);
 begin
   if F = nil then Exit;
 
+  AppSettings_Load(F);
+  SetRegDebugEnabled(F.chkDebug.Checked);
+  AppController_UpdateDebugLog(F);
   AppLog_Init(F.redLog);
+  AppController_Debug(F, SDebugMode, F.chkDebug.Checked, False);
   AppController_LoadTweaks(F);
 end;
 
 procedure AppController_LoadTweaks(F: TfrmMain);
 begin
   if F = nil then Exit;
-  F.chkRSA.Checked := RemoveShortcutArrowsR;
-  F.chkRSS.Checked := RemoveShortcutSuffixR;
+
+  IsLoadingTweaks := True;
+  try
+    F.chkRSA.Checked := RemoveShortcutArrowsR;
+    F.chkRSS.Checked := RemoveShortcutSuffixR;
+  finally
+    IsLoadingTweaks := False;
+  end;
+
+  AppController_Debug(F, STweakShortcutArrows, F.chkRSA.Checked);
+  AppController_Debug(F, STweakShortcutSuffix, F.chkRSS.Checked);
 end;
 
 procedure AppController_RestartExplorer(F: TfrmMain);
@@ -120,19 +162,31 @@ end;
 procedure AppController_Exit(F: TfrmMain);
 begin
   if F = nil then Exit;
+  SetRegDebugLogProc(nil);
   F.Close;
+end;
+
+procedure AppController_ToggleDebug(F: TfrmMain);
+begin
+  if F = nil then Exit;
+  SetRegDebugEnabled(F.chkDebug.Checked);
+  AppController_UpdateDebugLog(F);
+  AppSettings_Save(F);
+  AppController_Debug(F, SDebugMode, F.chkDebug.Checked);
 end;
 
 procedure AppController_ToggleShortcutArrows(F: TfrmMain);
 begin
-  if F = nil then Exit;
+  if (F = nil) or IsLoadingTweaks then Exit;
   RemoveShortcutArrowsW(F.chkRSA.Checked);
+  AppController_Debug(F, STweakShortcutArrows, F.chkRSA.Checked);
 end;
 
 procedure AppController_ToggleShortcutSuffix(F: TfrmMain);
 begin
-  if F = nil then Exit;
+  if (F = nil) or IsLoadingTweaks then Exit;
   RemoveShortcutSuffixW(F.chkRSS.Checked);
+  AppController_Debug(F, STweakShortcutSuffix, F.chkRSS.Checked);
 end;
 
 end.

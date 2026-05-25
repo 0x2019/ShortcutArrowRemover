@@ -25,6 +25,7 @@ type
     tmrRestartExplorer: TTimer;
     sCharImageList: TsCharImageList;
     redLog: TsRichEdit;
+    chkDebug: TsCheckBox;
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -33,6 +34,7 @@ type
     procedure tmrRestartExplorerTimer(Sender: TObject);
     procedure chkRSAClick(Sender: TObject);
     procedure chkRSSClick(Sender: TObject);
+    procedure chkDebugClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,6 +79,11 @@ end;
 procedure TfrmMain.chkRSSClick(Sender: TObject);
 begin
   AppController_ToggleShortcutSuffix(Self);
+end;
+
+procedure TfrmMain.chkDebugClick(Sender: TObject);
+begin
+  AppController_ToggleDebug(Self);
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);

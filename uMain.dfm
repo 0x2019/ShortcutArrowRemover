@@ -5,8 +5,8 @@ object frmMain: TfrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Shortcut Arrow Remover'
-  ClientHeight = 217
-  ClientWidth = 499
+  ClientHeight = 281
+  ClientWidth = 600
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object frmMain: TfrmMain
   OnKeyDown = FormKeyDown
   TextHeight = 13
   object btnRestartExplorer: TsBitBtn
-    Left = 184
-    Top = 191
+    Left = 286
+    Top = 255
     Width = 142
     Height = 25
     Caption = 'Restart &Explorer'
@@ -28,7 +28,7 @@ object frmMain: TfrmMain
     Images = sAlphaImageList
     ParentShowHint = False
     ShowHint = False
-    TabOrder = 2
+    TabOrder = 3
     TabStop = False
     OnClick = btnRestartExplorerClick
     SkinData.SkinSection = 'TOOLBUTTON'
@@ -37,7 +37,7 @@ object frmMain: TfrmMain
     Tag = 99
     Left = 0
     Top = 5
-    Width = 498
+    Width = 600
     Height = 52
     TabOrder = 0
     object chkRSS: TsCheckBox
@@ -74,8 +74,8 @@ object frmMain: TfrmMain
     end
   end
   object btnExit: TsBitBtn
-    Left = 418
-    Top = 191
+    Left = 520
+    Top = 255
     Width = 80
     Height = 25
     Caption = 'E&xit'
@@ -83,14 +83,14 @@ object frmMain: TfrmMain
     Images = sCharImageList
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 4
+    TabOrder = 5
     TabStop = False
     OnClick = btnExitClick
     SkinData.SkinSection = 'TOOLBUTTON'
   end
   object btnAbout: TsBitBtn
-    Left = 332
-    Top = 191
+    Left = 434
+    Top = 255
     Width = 80
     Height = 25
     Caption = '&About'
@@ -98,7 +98,7 @@ object frmMain: TfrmMain
     Images = sCharImageList
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 3
+    TabOrder = 4
     TabStop = False
     OnClick = btnAboutClick
     SkinData.SkinSection = 'TOOLBUTTON'
@@ -106,8 +106,8 @@ object frmMain: TfrmMain
   object redLog: TsRichEdit
     Left = 0
     Top = 63
-    Width = 498
-    Height = 122
+    Width = 600
+    Height = 186
     Cursor = crArrow
     Color = clWhite
     EnableURLs = True
@@ -122,6 +122,15 @@ object frmMain: TfrmMain
     ScrollBars = ssVertical
     ShowHint = False
     TabOrder = 1
+  end
+  object chkDebug: TsCheckBox
+    Left = 0
+    Top = 259
+    Width = 62
+    Height = 17
+    Caption = '&Debug'
+    TabOrder = 2
+    OnClick = chkDebugClick
   end
   object sSkinProvider: TsSkinProvider
     ShowAppIcon = False
