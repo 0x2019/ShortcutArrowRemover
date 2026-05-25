@@ -15,6 +15,7 @@ resourcestring
   SLogExplorerRestarting              = 'Restarting Windows Explorer...';
   SLogExplorerTerminated              = 'Terminated %s (PID: %d)';
   SLogExplorerStarted                 = 'Started %s (PID: %d)';
+  SLogExplorerFailedToTerminate       = 'Failed to terminate Windows Explorer (Error code: %d)';
   SLogExplorerFailedToStart           = 'Failed to start Windows Explorer (Error code: %d)';
   SLogExplorerRestartCompleted        = 'Windows Explorer restarted successfully.';
 

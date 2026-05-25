@@ -3,9 +3,9 @@
 interface
 
 uses
-  Winapi.Windows, System.SysUtils, ShellAPI, uMain,
+  Winapi.Windows, System.SysUtils, uMain,
 
-  uExplorer, uForms, uMessageBox, uOSUtils, uProcessUtils, uRegUtils;
+  uExplorer, uForms, uMessageBox, uRegUtils;
 
 procedure AppController_Init(F: TfrmMain);
 procedure AppController_LoadTweaks(F: TfrmMain);
@@ -83,7 +83,8 @@ end;
 procedure AppController_RestartExplorer(F: TfrmMain);
 var
   i: Integer;
-  PIDs: TArray<Cardinal>;
+  Event: Integer;
+  State: Integer;
 begin
   if F = nil then Exit;
 
@@ -91,15 +92,30 @@ begin
   begin
     F.btnRestartExplorer.Enabled := False;
     IsRestartingExplorer := True;
-    F.tmrRestartExplorer.Tag := 0;
+    F.tmrRestartExplorer.Tag := WaitTerminate;
 
     AppLog_Info(F.redLog, SLogExplorerRestarting);
 
-    PIDs := GetProcessIDs(PROCESS_NAME);
-    for i := Low(PIDs) to High(PIDs) do
-      AppLog_Info(F.redLog, Format(SLogExplorerTerminated, [PROCESS_NAME, PIDs[i]]));
+    State := F.tmrRestartExplorer.Tag;
+    Event := Explorer_RestartProcess(State);
+    F.tmrRestartExplorer.Tag := State;
 
-    ShellExecute(0, 'open', 'taskkill', PChar('/f /im ' + PROCESS_NAME), nil, SW_HIDE);
+    if Event < 0 then
+    begin
+      if Event = ErrRestartTerminate then
+        AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]))
+      else
+        AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]));
+
+      IsRestartingExplorer := False;
+      F.tmrRestartExplorer.Tag := State;
+      F.tmrRestartExplorer.Enabled := False;
+      F.btnRestartExplorer.Enabled := True;
+      Exit;
+    end;
+
+    for i := Low(PIDs) to High(PIDs) do
+      AppLog_Info(F.redLog, Format(SLogExplorerTerminated, [ProcessName, PIDs[i]]));
 
     F.tmrRestartExplorer.Interval := 1000;
     F.tmrRestartExplorer.Enabled := True;
@@ -108,49 +124,49 @@ end;
 
 procedure AppController_RestartExplorerTimer(F: TfrmMain);
 var
-  i: Integer;
-  R: NativeInt;
-  PIDs: TArray<Cardinal>;
+  Event: Integer;
+  State: Integer;
 begin
   if F = nil then Exit;
 
-  if IsExplorerUILoaded then
+  if not IsRestartingExplorer then
   begin
-    if IsRestartingExplorer then
-      AppLog_Success(F.redLog, SLogExplorerRestartCompleted);
+    F.tmrRestartExplorer.Enabled := False;
+    Exit;
+  end;
 
+  State := F.tmrRestartExplorer.Tag;
+  Event := Explorer_RestartProcess(State);
+  F.tmrRestartExplorer.Tag := State;
+
+  if Event < 0 then
+  begin
+    if Event = ErrRestartTerminate then
+      AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]))
+    else
+      AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]));
+
+    IsRestartingExplorer := False;
     F.tmrRestartExplorer.Enabled := False;
     F.btnRestartExplorer.Enabled := True;
-    IsRestartingExplorer := False;
-    F.tmrRestartExplorer.Tag := 0;
     Exit;
   end;
 
-  if IsExplorerRunning then
-  begin
-    if F.tmrRestartExplorer.Tag = 0 then
+  case Event of
+    EvtRestartStarted:
     begin
-      PIDs := GetProcessIDs(PROCESS_NAME);
-      for i := Low(PIDs) to High(PIDs) do
-      begin
-        AppLog_Info(F.redLog, Format(SLogExplorerStarted, [PROCESS_NAME, PIDs[i]]));
-        Break;
-      end;
       if Length(PIDs) > 0 then
-        F.tmrRestartExplorer.Tag := 1;
+        AppLog_Info(F.redLog, Format(SLogExplorerStarted, [ProcessName, PIDs[0]]));
     end;
-    Exit;
-  end;
 
-  DisableWow64FsRedirection(
-    procedure
+    EvtRestartCompleted:
     begin
-      R := NativeInt(ShellExecute(F.Handle, 'open', PChar(PROCESS_NAME), nil, nil, SW_SHOWNORMAL));
-
-      if R <= 32 then
-        AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [R]));
-    end
-  );
+      AppLog_Success(F.redLog, SLogExplorerRestartCompleted);
+      IsRestartingExplorer := False;
+      F.tmrRestartExplorer.Enabled := False;
+      F.btnRestartExplorer.Enabled := True;
+    end;
+  end;
 end;
 
 procedure AppController_About(F: TfrmMain);
