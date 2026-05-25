@@ -28,13 +28,19 @@ const
 var
   i: Integer;
 begin
-  Result := Option;
+  Result := True;
 
   for i := Low(PATHS) to High(PATHS) do
     if Option then
-      DeleteRegValue(ROOT, PATHS[i], VALUE)
+    begin
+      if not DeleteRegValue(ROOT, PATHS[i], VALUE) then
+        Result := False;
+    end
     else
-      WriteRegString(ROOT, PATHS[i], VALUE, '');
+    begin
+      if not WriteRegString(ROOT, PATHS[i], VALUE, '') then
+        Result := False;
+    end;
 end;
 
 function RemoveShortcutSuffixW(Option: Boolean): Boolean;
@@ -45,8 +51,6 @@ const
 var
   Data: Cardinal;
 begin
-  Result := Option;
-
   if Option then
     Data := 0
   else
@@ -59,7 +63,7 @@ begin
       Data := $16;
   end;
 
-  WriteRegBinary(ROOT, PATH, VALUE, Data);
+  Result := WriteRegBinary(ROOT, PATH, VALUE, Data);
 end;
 
 end.
