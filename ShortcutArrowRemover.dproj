@@ -123,7 +123,7 @@
         <VerInfo_Keys>CompanyName=;FileDescription=Shortcut Arrow Remover;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=Shortcut Arrow Remover;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
-        <DCC_UnitSearchPath>..\Common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\Common;..\Common\About;..\Common\uFMOD;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -134,6 +134,10 @@
         </DelphiCompile>
         <DCCReference Include="uMain.pas">
             <Form>frmMain</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uAbout.pas">
+            <Form>frmAbout</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uAppController.pas"/>
@@ -149,6 +153,7 @@
         <DCCReference Include="..\Common\uOSUtils.pas"/>
         <DCCReference Include="..\Common\uRichEdit.pas"/>
         <DCCReference Include="..\Common\uRegUtils.pas"/>
+        <DCCReference Include="..\Common\About\uMetaballs.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

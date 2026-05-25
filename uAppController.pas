@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, System.SysUtils, ShellAPI, uMain,
 
-  uExplorer, uMessageBox, uOSUtils, uProcessUtils, uRegUtils;
+  uExplorer, uForms, uMessageBox, uOSUtils, uProcessUtils, uRegUtils;
 
 procedure AppController_Init(F: TfrmMain);
 procedure AppController_LoadTweaks(F: TfrmMain);
@@ -22,7 +22,7 @@ procedure AppController_ToggleShortcutSuffix(F: TfrmMain);
 implementation
 
 uses
-  uAppStrings, uAppLog, uAppSettings,
+  uAbout, uAppStrings, uAppLog, uAppSettings,
   uTweaks.Consts, uTweaksR, uTweaksW;
 
 var
@@ -156,7 +156,7 @@ end;
 procedure AppController_About(F: TfrmMain);
 begin
   if F = nil then Exit;
-  UI_MessageBox(F, Format(SAboutMsg, [APP_NAME, APP_VERSION, APP_RELEASE, APP_URL]), MB_ICONQUESTION or MB_OK);
+  UI_ShowModalForm(TfrmAbout.Create(F));
 end;
 
 procedure AppController_Exit(F: TfrmMain);

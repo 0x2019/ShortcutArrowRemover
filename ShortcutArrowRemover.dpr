@@ -4,6 +4,7 @@ uses
   Winapi.Windows,
   Vcl.Forms,
   uMain in 'uMain.pas' {frmMain},
+  uAbout in 'uAbout.pas' {frmAbout},
   uAppController in 'uAppController.pas',
   uAppLog in 'uAppLog.pas',
   uAppSettings in 'uAppSettings.pas',
@@ -16,7 +17,8 @@ uses
   uMessageBox in '..\Common\uMessageBox.pas',
   uOSUtils in '..\Common\uOSUtils.pas',
   uRichEdit in '..\Common\uRichEdit.pas',
-  uRegUtils in '..\Common\uRegUtils.pas';
+  uRegUtils in '..\Common\uRegUtils.pas',
+  uMetaballs in '..\Common\About\uMetaballs.pas';
 
 var
   uMutex: THandle;

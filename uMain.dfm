@@ -1970,6 +1970,7 @@ object frmMain: TfrmMain
     SkinDirectory = 'c:\Skins'
     SkinName = 'Ubuntu (internal)'
     SkinInfo = '14.02'
+    SkinningRules = [srStdDialogs, srThirdParty]
     ThirdParty.ThirdEdits = ' '
     ThirdParty.ThirdButtons = 'TButton'
     ThirdParty.ThirdBitBtns = ' '
