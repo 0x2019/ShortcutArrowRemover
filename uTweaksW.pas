@@ -25,6 +25,10 @@ const
     'piffile',
     'WSHFile'
   );
+  ROOT2 = HKEY_LOCAL_MACHINE;
+  PATH2 = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons';
+  VALUE2 = '29';
+  DATA2 = '%WINDIR%\System32\shell32.dll,-50';
 var
   i: Integer;
 begin
@@ -41,6 +45,20 @@ begin
       if not WriteRegString(ROOT, PATHS[i], VALUE, '') then
         Result := False;
     end;
+
+  if Option then
+  begin
+    if not WriteRegString(ROOT2, PATH2, VALUE2, DATA2) then
+      Result := False;
+  end
+  else
+  begin
+    if not DeleteRegValue(ROOT2, PATH2, VALUE2, REG_SZ) then
+      Result := False;
+
+    if not DeleteRegKeyIfEmpty(ROOT2, PATH2) then
+      Result := False;
+  end;
 end;
 
 function RemoveShortcutSuffixW(Option: Boolean): Boolean;

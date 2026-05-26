@@ -3,7 +3,7 @@
 interface
 
 uses
-  Winapi.Windows, uRegUtils;
+  Winapi.Windows, System.SysUtils, uRegUtils;
 
 function RemoveShortcutArrowsR: Boolean;
 function RemoveShortcutSuffixR: Boolean;
@@ -25,8 +25,13 @@ const
     'piffile',
     'WSHFile'
   );
+  ROOT2 = HKEY_LOCAL_MACHINE;
+  PATH2 = 'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons';
+  VALUE2 = '29';
+  DATA2 = '%WINDIR%\System32\shell32.dll,-50';
 var
   i: Integer;
+  Data: string;
 begin
   for i := Low(PATHS) to High(PATHS) do
   begin
@@ -34,7 +39,10 @@ begin
       Exit(False);
   end;
 
-  Result := True;
+  if not ReadRegString(ROOT2, PATH2, VALUE2, Data) then
+    Exit(False);
+
+  Result := SameText(Data, DATA2);
 end;
 
 function RemoveShortcutSuffixR: Boolean;
