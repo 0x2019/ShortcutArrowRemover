@@ -32,13 +32,28 @@ begin
 end;
 
 procedure AppLog_Append(ARichEdit: TCustomRichEdit; const Msg: string; const Style: TFontStyles; const Color: TColor);
+var
+  Line: string;
+  Error: string;
 begin
   if ARichEdit = nil then
     Exit;
 
+  Line := Trim(Msg);
+
   RichEdit_SetCaret(ARichEdit);
   RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, Msg, Style, Color);
+
+  if Copy(Line, 1, Length(SRegDebugError)) = SRegDebugError then
+  begin
+    Error := Copy(Line, Length(SRegDebugError) + 1, MaxInt);
+    RichEdit_SetSelectionText(ARichEdit, SRegDebugError, [fsBold], clRed);
+    if Error <> '' then
+      RichEdit_SetSelectionText(ARichEdit, Error, [], clWindowText);
+  end
+  else
+    RichEdit_SetSelectionText(ARichEdit, Msg, Style, Color);
+
   ARichEdit.SelText := sLineBreak;
   AppLog_UpdateView(ARichEdit);
 end;
@@ -54,8 +69,14 @@ var
   Suffix: string;
   i: Integer;
 const
-  Labels: array[0..3] of string = (
+  Labels: array[0..9] of string = (
     SRegDebugPath,
+    SRegDebugCreatedValue,
+    SRegDebugUpdatedValue,
+    SRegDebugDeletedValue,
+    SRegDebugDeletedSubKey,
+    SRegDebugDeletedParentKey,
+    SRegDebugError,
     SRegDebugValue,
     SRegDebugType,
     SRegDebugData
@@ -93,9 +114,18 @@ begin
 
     if HasLabel then
     begin
-      RichEdit_SetSelectionText(ARichEdit, ' ' + FieldLabel, [fsBold], clWindowText);
-      if FieldValue <> '' then
-        RichEdit_SetSelectionText(ARichEdit, FieldValue, [], clWindowText);
+      if FieldLabel = SRegDebugError then
+      begin
+        RichEdit_SetSelectionText(ARichEdit, ' ' + FieldLabel, [fsBold], clRed);
+        if FieldValue <> '' then
+          RichEdit_SetSelectionText(ARichEdit, FieldValue, [], clWindowText);
+      end
+      else
+      begin
+        RichEdit_SetSelectionText(ARichEdit, ' ' + FieldLabel, [fsBold], clWindowText);
+        if FieldValue <> '' then
+          RichEdit_SetSelectionText(ARichEdit, FieldValue, [], clWindowText);
+      end;
     end
     else
     begin

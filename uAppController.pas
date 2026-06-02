@@ -22,24 +22,11 @@ procedure AppController_ToggleShortcutSuffix(F: TfrmMain);
 implementation
 
 uses
-  uAbout, uAppStrings, uAppLog, uAppSettings,
+  uAbout, uAppDebug, uAppStrings, uAppLog, uAppSettings,
   uTweaks.Consts, uTweaksR, uTweaksW;
 
 var
   IsLoadingTweaks: Boolean = False;
-
-procedure AppController_UpdateDebugLog(F: TfrmMain);
-begin
-  if (F <> nil) and IsRegDebugEnabled then
-    SetRegDebugLogProc(
-      procedure(const Msg: string)
-      begin
-        AppLog_Info(F.redLog, Msg);
-      end
-    )
-  else
-    SetRegDebugLogProc(nil);
-end;
 
 procedure AppController_Debug(F: TfrmMain; const TweakName: string; const Enabled: Boolean; const Disabled: Boolean = True);
 begin
@@ -58,7 +45,7 @@ begin
 
   AppSettings_Load(F);
   SetRegDebugEnabled(F.chkDebug.Checked);
-  AppController_UpdateDebugLog(F);
+  AppDebug_UpdateHandlers(F);
   AppLog_Init(F.redLog);
   AppController_Debug(F, SDebugMode, F.chkDebug.Checked, False);
   AppController_LoadTweaks(F);
@@ -178,7 +165,7 @@ end;
 procedure AppController_Exit(F: TfrmMain);
 begin
   if F = nil then Exit;
-  SetRegDebugLogProc(nil);
+  AppDebug_ClearHandlers;
   F.Close;
 end;
 
@@ -186,7 +173,7 @@ procedure AppController_ToggleDebug(F: TfrmMain);
 begin
   if F = nil then Exit;
   SetRegDebugEnabled(F.chkDebug.Checked);
-  AppController_UpdateDebugLog(F);
+  AppDebug_UpdateHandlers(F);
   AppSettings_Save(F);
   AppController_Debug(F, SDebugMode, F.chkDebug.Checked);
 end;

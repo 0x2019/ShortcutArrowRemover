@@ -6,6 +6,7 @@ uses
   uMain in 'uMain.pas' {frmMain},
   uAbout in 'uAbout.pas' {frmAbout},
   uAppController in 'uAppController.pas',
+  uAppDebug in 'uAppDebug.pas',
   uAppLog in 'uAppLog.pas',
   uAppSettings in 'uAppSettings.pas',
   uAppStrings in 'uAppStrings.pas',
