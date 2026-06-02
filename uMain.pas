@@ -6,9 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.Classes, System.SysUtils, Vcl.Buttons,
   Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.ImgList, Vcl.StdCtrls,
   sSkinManager, sSkinProvider, sCheckBox, sPanel, acAlphaImageList, sBitBtn,
-  acAlphaHints, System.ImageList, Vcl.ComCtrls, sRichEdit,
+  acAlphaHints, System.ImageList, Vcl.ComCtrls, sRichEdit, Vcl.Menus,
 
-  uExplorer, uForms, uMessageBox;
+  uExplorer, uForms, uMenu.Popup, uMessageBox;
 
 type
   TfrmMain = class(TForm)
@@ -26,6 +26,10 @@ type
     sCharImageList: TsCharImageList;
     redLog: TsRichEdit;
     chkDebug: TsCheckBox;
+    pmPopup: TPopupMenu;
+    pmiCopy: TMenuItem;
+    pmiSelectAll: TMenuItem;
+    sMenuImageList: TsCharImageList;
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -35,6 +39,9 @@ type
     procedure chkRSAClick(Sender: TObject);
     procedure chkRSSClick(Sender: TObject);
     procedure chkDebugClick(Sender: TObject);
+    procedure pmPopupPopup(Sender: TObject);
+    procedure pmiCopyClick(Sender: TObject);
+    procedure pmiSelectAllClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -49,7 +56,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uAppController, uAppStrings;
+  uAppController, uAppMenu.Popup, uAppStrings;
 
 procedure TfrmMain.btnAboutClick(Sender: TObject);
 begin
@@ -93,6 +100,7 @@ begin
   UI_SetAlwaysOnTop(Self, True);
 
   AppController_Init(Self);
+  AppMenu_Popup_Init(Self);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
@@ -100,6 +108,26 @@ procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_ESCAPE then
   AppController_Exit(Self);
+end;
+
+procedure TfrmMain.pmPopupPopup(Sender: TObject);
+var
+  Items: TPopupItems;
+begin
+  Items := Default(TPopupItems);
+  Items.Copy := pmiCopy;
+  Items.SelectAll := pmiSelectAll;
+  AppMenu_Popup_Update(Self, Sender, Items);
+end;
+
+procedure TfrmMain.pmiCopyClick(Sender: TObject);
+begin
+  AppMenu_Popup_Copy(Self, Sender);
+end;
+
+procedure TfrmMain.pmiSelectAllClick(Sender: TObject);
+begin
+  AppMenu_Popup_SelectAll(Self, Sender);
 end;
 
 procedure TfrmMain.tmrRestartExplorerTimer(Sender: TObject);

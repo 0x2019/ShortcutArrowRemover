@@ -118,6 +118,7 @@ object frmMain: TfrmMain
     Font.Style = []
     ParentFont = False
     ParentShowHint = False
+    PopupMenu = pmPopup
     ReadOnly = True
     ScrollBars = ssVertical
     ShowHint = False
@@ -14314,6 +14315,45 @@ object frmMain: TfrmMain
       end>
     Left = 229
     Top = 111
+    Bitmap = {}
+  end
+  object pmPopup: TPopupMenu
+    Images = sMenuImageList
+    OnPopup = pmPopupPopup
+    Left = 365
+    Top = 127
+    object pmiCopy: TMenuItem
+      Caption = '&Copy'
+      SubMenuImages = sMenuImageList
+      ImageIndex = 0
+      OnClick = pmiCopyClick
+    end
+    object pmiSelectAll: TMenuItem
+      Caption = '&Select All'
+      SubMenuImages = sMenuImageList
+      ImageIndex = 1
+      ShortCut = 16449
+      OnClick = pmiSelectAllClick
+    end
+  end
+  object sMenuImageList: TsCharImageList
+    ShareImages = True
+    EmbeddedFonts = <
+      item
+        FontName = 'FontAwesome'
+        FontData = {}
+      end>
+    Items = <
+      item
+        ScalingFactor = 0.700000000000000000
+        Char = 61637
+      end
+      item
+        ScalingFactor = 0.700000000000000000
+        Char = 61474
+      end>
+    Left = 505
+    Top = 99
     Bitmap = {}
   end
 end

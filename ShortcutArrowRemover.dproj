@@ -143,6 +143,7 @@
         <DCCReference Include="uAppController.pas"/>
         <DCCReference Include="uAppDebug.pas"/>
         <DCCReference Include="uAppLog.pas"/>
+        <DCCReference Include="uAppMenu.Popup.pas"/>
         <DCCReference Include="uAppSettings.pas"/>
         <DCCReference Include="uAppStrings.pas"/>
         <DCCReference Include="uTweaks.Consts.pas"/>
@@ -150,6 +151,7 @@
         <DCCReference Include="uTweaksW.pas"/>
         <DCCReference Include="..\Common\uExplorer.pas"/>
         <DCCReference Include="..\Common\uForms.pas"/>
+        <DCCReference Include="..\Common\uMenu.Popup.pas"/>
         <DCCReference Include="..\Common\uMessageBox.pas"/>
         <DCCReference Include="..\Common\uOSUtils.pas"/>
         <DCCReference Include="..\Common\uRichEdit.pas"/>
