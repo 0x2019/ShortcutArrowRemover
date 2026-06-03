@@ -3,7 +3,9 @@ unit uAppSettings;
 interface
 
 uses
-  System.SysUtils, Vcl.Forms, IniFiles, uMain;
+  System.SysUtils, Vcl.Forms, IniFiles, uMain,
+
+  uPathUtils;
 
 procedure AppSettings_Load(F: TfrmMain);
 procedure AppSettings_Save(F: TfrmMain);
@@ -19,6 +21,13 @@ begin
   Ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'), TEncoding.UTF8);
   try
     F.chkDebug.Checked := Ini.ReadBool('Main', 'Debug', False);
+
+    F.FLogPath := Ini.ReadString('Log', 'Path', '');
+    if F.FLogPath <> '' then
+      F.FLogPath := ExpandPathVariables(F.FLogPath);
+    F.FLogPath := ExcludeTrailingPathDelimiter(NormalizePath(F.FLogPath));
+    if F.FLogPath = '' then
+      F.FLogPath := ExcludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
   finally
     Ini.Free;
   end;
@@ -33,6 +42,8 @@ begin
   Ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'), TEncoding.UTF8);
   try
     Ini.WriteBool('Main', 'Debug', F.chkDebug.Checked);
+
+    Ini.WriteString('Log', 'Path', ExcludeTrailingPathDelimiter(NormalizePath(F.FLogPath)));
     Ini.UpdateFile;
   finally
     Ini.Free;

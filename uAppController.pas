@@ -165,7 +165,6 @@ end;
 procedure AppController_Exit(F: TfrmMain);
 begin
   if F = nil then Exit;
-  AppDebug_ClearHandlers;
   F.Close;
 end;
 

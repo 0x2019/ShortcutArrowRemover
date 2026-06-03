@@ -15,6 +15,7 @@ object frmMain: TfrmMain
   Font.Style = []
   KeyPreview = True
   Position = poMainFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   TextHeight = 13

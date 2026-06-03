@@ -35,6 +35,7 @@ type
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure btnRestartExplorerClick(Sender: TObject);
     procedure tmrRestartExplorerTimer(Sender: TObject);
@@ -48,6 +49,7 @@ type
   private
     { Private declarations }
   public
+    FLogPath: string;
     procedure ChangeMessageBoxPosition(var Msg: TMessage); message mbMessage;
   end;
 
@@ -59,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-  uAppController, uAppMenu.Popup, uAppStrings;
+  uAppController, uAppDebug, uAppMenu.Popup, uAppSettings, uAppStrings;
 
 procedure TfrmMain.btnAboutClick(Sender: TObject);
 begin
@@ -104,6 +106,12 @@ begin
 
   AppController_Init(Self);
   AppMenu_Popup_Init(Self);
+end;
+
+procedure TfrmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  AppSettings_Save(Self);
+  AppDebug_ClearHandlers;
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;

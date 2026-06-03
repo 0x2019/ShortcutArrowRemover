@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, System.SysUtils, System.Classes, Vcl.Menus, uMain,
 
-  uFileDialog, uMenu.Popup;
+  uFileDialog, uMenu.Popup, uPathUtils;
 
 procedure AppMenu_Popup_Init(F: TfrmMain);
 procedure AppMenu_Popup_Copy(F: TfrmMain; Sender: TObject);
@@ -16,7 +16,7 @@ procedure AppMenu_Popup_Update(F: TfrmMain; Sender: TObject; const Items: TPopup
 implementation
 
 uses
-  uAppLog, uAppStrings;
+  uAppLog, uAppSettings, uAppStrings;
 
 procedure AppMenu_Popup_Init(F: TfrmMain);
 begin
@@ -47,6 +47,7 @@ end;
 
 procedure AppMenu_Popup_SaveLog(F: TfrmMain);
 var
+  DefaultDir: string;
   FileName: string;
   Lines: TStringList;
 begin
@@ -54,8 +55,14 @@ begin
     Exit;
 
   try
+    DefaultDir := ExtractFilePath(Trim(F.SaveFileDlg.FileName));
+    if DefaultDir = '' then
+      DefaultDir := Trim(F.FLogPath);
+    if DefaultDir = '' then
+      DefaultDir := ExtractFilePath(ParamStr(0));
+
     if not UI_SaveFileDialog(F.SaveFileDlg, F.Handle,
-      IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) +
+      IncludeTrailingPathDelimiter(DefaultDir) +
       Format('%s_%s.log', [APP_NAME, FormatDateTime('yyyymmdd_hhnnss', Now)]),
       FileName) then
       Exit;
@@ -65,6 +72,8 @@ begin
       Lines.Text := F.redLog.Lines.Text;
       Lines.SaveToFile(FileName, TEncoding.UTF8);
       AppLog_Info(F.redLog, SLogSaved, FileName);
+      F.FLogPath := ExcludeTrailingPathDelimiter(NormalizePath(ExtractFilePath(FileName)));
+      AppSettings_Save(F);
     finally
       Lines.Free;
     end;
