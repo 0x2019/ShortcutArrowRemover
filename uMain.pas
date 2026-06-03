@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.Classes, System.SysUtils, Vcl.Buttons,
   Vcl.Controls, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.ImgList, Vcl.StdCtrls,
   sSkinManager, sSkinProvider, sCheckBox, sPanel, acAlphaImageList, sBitBtn,
-  acAlphaHints, System.ImageList, Vcl.ComCtrls, sRichEdit, Vcl.Menus,
+  acAlphaHints, System.ImageList, Vcl.ComCtrls, sRichEdit, Vcl.Menus, Vcl.Dialogs,
 
   uExplorer, uForms, uMenu.Popup, uMessageBox;
 
@@ -29,7 +29,9 @@ type
     pmPopup: TPopupMenu;
     pmiCopy: TMenuItem;
     pmiSelectAll: TMenuItem;
+    pmiSaveLog: TMenuItem;
     sMenuImageList: TsCharImageList;
+    SaveFileDlg: TFileSaveDialog;
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -42,6 +44,7 @@ type
     procedure pmPopupPopup(Sender: TObject);
     procedure pmiCopyClick(Sender: TObject);
     procedure pmiSelectAllClick(Sender: TObject);
+    procedure pmiSaveLogClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -128,6 +131,11 @@ end;
 procedure TfrmMain.pmiSelectAllClick(Sender: TObject);
 begin
   AppMenu_Popup_SelectAll(Self, Sender);
+end;
+
+procedure TfrmMain.pmiSaveLogClick(Sender: TObject);
+begin
+  AppMenu_Popup_SaveLog(Self);
 end;
 
 procedure TfrmMain.tmrRestartExplorerTimer(Sender: TObject);

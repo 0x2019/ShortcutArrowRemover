@@ -16,6 +16,7 @@ uses
   uTweaksW in 'uTweaksW.pas',
   uExplorer in '..\Common\uExplorer.pas',
   uForms in '..\Common\uForms.pas',
+  uFileDialog in '..\Common\uFileDialog.pas',
   uMenu.Popup in '..\Common\uMenu.Popup.pas',
   uMessageBox in '..\Common\uMessageBox.pas',
   uOSUtils in '..\Common\uOSUtils.pas',

@@ -10,6 +10,7 @@ procedure AppLog_Init(ARichEdit: TCustomRichEdit);
 
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Msg: string); overload;
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Tweak: string; const Enabled: Boolean); overload;
+procedure AppLog_Info(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
 procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const Msg: string);
 procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const Msg: string);
 procedure AppLog_Error(ARichEdit: TCustomRichEdit; const Msg: string);
@@ -151,23 +152,6 @@ begin
   AppLog_UpdateView(ARichEdit);
 end;
 
-procedure AppLog_AppendKeyValue(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string);
-var
-  Key: string;
-begin
-  if ARichEdit = nil then
-    Exit;
-
-  Key := Format(KeyFormat, ['']);
-
-  RichEdit_SetCaret(ARichEdit);
-  RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, Key, [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, Value, [], clWindowText);
-  ARichEdit.SelText := sLineBreak;
-  AppLog_UpdateView(ARichEdit);
-end;
-
 procedure AppLog_Init(ARichEdit: TCustomRichEdit);
 begin
   if ARichEdit = nil then
@@ -177,7 +161,7 @@ begin
   try
     ARichEdit.Clear;
     AppLog_Append(ARichEdit, APP_NAME + ' ' + APP_VERSION, [fsBold], clWindowText);
-    AppLog_AppendKeyValue(ARichEdit, SLogOSVersion, TOSVersion.ToString);
+    AppLog_Info(ARichEdit, SLogOSVersion, TOSVersion.ToString);
   finally
     ARichEdit.Lines.EndUpdate;
   end;
@@ -213,6 +197,23 @@ begin
   RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
   RichEdit_SetSelectionText(ARichEdit, '[' + Tweak + ']', [fsBold], MsgColor[Enabled]);
   RichEdit_SetSelectionText(ARichEdit, Suffix, [], MsgColor[Enabled]);
+  ARichEdit.SelText := sLineBreak;
+  AppLog_UpdateView(ARichEdit);
+end;
+
+procedure AppLog_Info(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+var
+  Key: string;
+begin
+  if ARichEdit = nil then
+    Exit;
+
+  Key := Format(KeyFormat, ['']);
+
+  RichEdit_SetCaret(ARichEdit);
+  RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
+  RichEdit_SetSelectionText(ARichEdit, Key, [fsBold], clWindowText);
+  RichEdit_SetSelectionText(ARichEdit, Value, [], clWindowText);
   ARichEdit.SelText := sLineBreak;
   AppLog_UpdateView(ARichEdit);
 end;

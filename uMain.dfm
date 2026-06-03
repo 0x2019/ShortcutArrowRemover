@@ -125,8 +125,8 @@ object frmMain: TfrmMain
     TabOrder = 1
   end
   object chkDebug: TsCheckBox
-    Left = 0
-    Top = 259
+    Left = 8
+    Top = 258
     Width = 62
     Height = 17
     Caption = '&Debug'
@@ -14335,6 +14335,16 @@ object frmMain: TfrmMain
       ShortCut = 16449
       OnClick = pmiSelectAllClick
     end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object pmiSaveLog: TMenuItem
+      Caption = '&Save Log...'
+      SubMenuImages = sMenuImageList
+      ImageIndex = 2
+      ShortCut = 16467
+      OnClick = pmiSaveLogClick
+    end
   end
   object sMenuImageList: TsCharImageList
     ShareImages = True
@@ -14351,9 +14361,29 @@ object frmMain: TfrmMain
       item
         ScalingFactor = 0.700000000000000000
         Char = 61474
+      end
+      item
+        ScalingFactor = 0.700000000000000000
+        Char = 61639
       end>
     Left = 505
     Top = 99
     Bitmap = {}
+  end
+  object SaveFileDlg: TFileSaveDialog
+    DefaultExtension = 'log'
+    FavoriteLinks = <>
+    FileTypes = <
+      item
+        DisplayName = 'Log files (*.log)'
+        FileMask = '*.log'
+      end
+      item
+        DisplayName = 'All files (*.*)'
+        FileMask = '*.*'
+      end>
+    Options = [fdoOverWritePrompt, fdoPathMustExist]
+    Left = 320
+    Top = 117
   end
 end

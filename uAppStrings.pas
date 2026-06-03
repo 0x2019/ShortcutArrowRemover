@@ -22,6 +22,9 @@ resourcestring
   SLogEnabled                         = '%s enabled.';
   SLogDisabled                        = '%s disabled.';
 
+  SLogSaved                           = 'Log saved: %s';
+  SLogSaveFailed                      = 'Failed to save log. (Details: %s)';
+
   SAboutMsg                           = '%s %s' + sLineBreak +
                                         'c0ded by 龍, written in Delphi.' + sLineBreak + sLineBreak +
                                         'Release Date: %s' + sLineBreak +
