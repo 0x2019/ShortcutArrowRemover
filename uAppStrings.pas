@@ -33,6 +33,7 @@ resourcestring
 const
   SRegDebug                           = '[DEBUG]';
   SRegDebugPath                       = 'Path: ';
+  SRegDebugCreatedKey                 = 'Created key: ';
   SRegDebugCreatedValue               = 'Created value: ';
   SRegDebugUpdatedValue               = 'Updated value: ';
   SRegDebugDeletedValue               = 'Deleted value: ';

@@ -149,8 +149,9 @@ var
   Line: string;
   Value: string;
 const
-  Labels: array[0..9] of string = (
+  Labels: array[0..10] of string = (
     SRegDebugPath,
+    SRegDebugCreatedKey,
     SRegDebugCreatedValue,
     SRegDebugUpdatedValue,
     SRegDebugDeletedValue,
