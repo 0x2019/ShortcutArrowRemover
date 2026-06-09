@@ -11,10 +11,18 @@ procedure AppLog_Init(ARichEdit: TCustomRichEdit);
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Msg: string); overload;
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Tweak: string; const Enabled: Boolean); overload;
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
-procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const Msg: string);
-procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const Msg: string);
-procedure AppLog_Error(ARichEdit: TCustomRichEdit; const Msg: string);
-procedure AppLog_Success(ARichEdit: TCustomRichEdit; const Msg: string);
+
+procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const Msg: string); overload;
+procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+
+procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const Msg: string); overload;
+procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+
+procedure AppLog_Error(ARichEdit: TCustomRichEdit; const Msg: string); overload;
+procedure AppLog_Error(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+
+procedure AppLog_Success(ARichEdit: TCustomRichEdit; const Msg: string); overload;
+procedure AppLog_Success(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
 
 implementation
 
@@ -33,122 +41,55 @@ begin
 end;
 
 procedure AppLog_Append(ARichEdit: TCustomRichEdit; const Msg: string; const Style: TFontStyles; const Color: TColor);
-var
-  Line: string;
-  Error: string;
 begin
   if ARichEdit = nil then
     Exit;
 
-  Line := Trim(Msg);
-
   RichEdit_SetCaret(ARichEdit);
   RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
-
-  if Copy(Line, 1, Length(SRegDebugError)) = SRegDebugError then
-  begin
-    Error := Copy(Line, Length(SRegDebugError) + 1, MaxInt);
-    RichEdit_SetSelectionText(ARichEdit, SRegDebugError, [fsBold], clRed);
-    if Error <> '' then
-      RichEdit_SetSelectionText(ARichEdit, Error, [], clWindowText);
-  end
-  else
-    RichEdit_SetSelectionText(ARichEdit, Msg, Style, Color);
+  RichEdit_SetSelectionText(ARichEdit, Trim(Msg), Style, Color);
 
   ARichEdit.SelText := sLineBreak;
   AppLog_UpdateView(ARichEdit);
 end;
 
-procedure AppLog_AppendDebug(ARichEdit: TCustomRichEdit; const Msg: string);
+procedure AppLog_AppendKeyValue(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string; const Color: TColor);
 var
-  Line: string;
-  FieldLabel: string;
-  FieldValue: string;
-  HasLabel: Boolean;
-  BracketEnd: Integer;
-  Bracket: string;
-  Suffix: string;
-  i: Integer;
-const
-  Labels: array[0..9] of string = (
-    SRegDebugPath,
-    SRegDebugCreatedValue,
-    SRegDebugUpdatedValue,
-    SRegDebugDeletedValue,
-    SRegDebugDeletedSubKey,
-    SRegDebugDeletedParentKey,
-    SRegDebugError,
-    SRegDebugValue,
-    SRegDebugType,
-    SRegDebugData
-  );
+  Key: string;
 begin
   if ARichEdit = nil then
     Exit;
 
-  Line := Trim(Msg);
-  if Copy(Line, 1, Length(SRegDebug)) = SRegDebug then
-    Delete(Line, 1, Length(SRegDebug));
-
-  Line := TrimLeft(Line);
+  Key := Format(KeyFormat, ['']);
 
   RichEdit_SetCaret(ARichEdit);
   RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, SRegDebug, [fsBold], clMaroon);
-
-  if Line <> '' then
-  begin
-    HasLabel := False;
-    FieldLabel := '';
-    FieldValue := Line;
-
-    for i := Low(Labels) to High(Labels) do
-    begin
-      if Copy(Line, 1, Length(Labels[i])) = Labels[i] then
-      begin
-        HasLabel := True;
-        FieldLabel := Labels[i];
-        FieldValue := Copy(Line, Length(Labels[i]) + 1, MaxInt);
-        Break;
-      end;
-    end;
-
-    if HasLabel then
-    begin
-      if FieldLabel = SRegDebugError then
-      begin
-        RichEdit_SetSelectionText(ARichEdit, ' ' + FieldLabel, [fsBold], clRed);
-        if FieldValue <> '' then
-          RichEdit_SetSelectionText(ARichEdit, FieldValue, [], clWindowText);
-      end
-      else
-      begin
-        RichEdit_SetSelectionText(ARichEdit, ' ' + FieldLabel, [fsBold], clWindowText);
-        if FieldValue <> '' then
-          RichEdit_SetSelectionText(ARichEdit, FieldValue, [], clWindowText);
-      end;
-    end
-    else
-    begin
-      BracketEnd := 0;
-      if Line[1] = '[' then
-        BracketEnd := Pos(']', Line);
-
-      if BracketEnd > 1 then
-      begin
-        Bracket := Copy(Line, 1, BracketEnd);
-        Suffix := Copy(Line, BracketEnd + 1, MaxInt);
-        RichEdit_SetSelectionText(ARichEdit, ' ' + Bracket, [fsBold], clWindowText);
-        if Bracket <> '' then
-          RichEdit_SetSelectionText(ARichEdit, Bracket, [], clWindowText);
-      end
-      else
-        RichEdit_SetSelectionText(ARichEdit, ' ' + Line, [], clWindowText);
-    end;
-  end;
-
+  RichEdit_SetSelectionText(ARichEdit, Key, [fsBold], Color);
+  RichEdit_SetSelectionText(ARichEdit, Value, [], Color);
   ARichEdit.SelText := sLineBreak;
+  AppLog_UpdateView(ARichEdit);
+end;
 
+procedure AppLog_AppendDebugKeyValue(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string;
+  const KeyColor, ValueColor: TColor; const ValueStyle: TFontStyles = []);
+var
+  Key: string;
+begin
+  if ARichEdit = nil then
+    Exit;
+
+  Key := Format(KeyFormat, ['']);
+  if (Key <> '') and (Key[Length(Key)] <> ' ') then
+    Key := Key + ' ';
+
+  RichEdit_SetCaret(ARichEdit);
+  RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
+  RichEdit_SetSelectionText(ARichEdit, SRegDebug + ' ', [fsBold], clMaroon);
+  if Key <> '' then
+    RichEdit_SetSelectionText(ARichEdit, Key, [fsBold], KeyColor);
+  if Value <> '' then
+    RichEdit_SetSelectionText(ARichEdit, Value, ValueStyle, ValueColor);
+  ARichEdit.SelText := sLineBreak;
   AppLog_UpdateView(ARichEdit);
 end;
 
@@ -169,10 +110,7 @@ end;
 
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Msg: string); overload;
 begin
-  if Copy(TrimLeft(Msg), 1, Length(SRegDebug)) = SRegDebug then
-    AppLog_AppendDebug(ARichEdit, Msg)
-  else
-    AppLog_Append(ARichEdit, Msg, [fsBold], clWindowText);
+  AppLog_Append(ARichEdit, Msg, [], clWindowText);
 end;
 
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const Tweak: string; const Enabled: Boolean); overload;
@@ -202,40 +140,97 @@ begin
 end;
 
 procedure AppLog_Info(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+begin
+  AppLog_AppendKeyValue(ARichEdit, KeyFormat, Value, clWindowText);
+end;
+
+procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const Msg: string);
 var
-  Key: string;
+  Line: string;
+  Value: string;
+const
+  Labels: array[0..9] of string = (
+    SRegDebugPath,
+    SRegDebugCreatedValue,
+    SRegDebugUpdatedValue,
+    SRegDebugDeletedValue,
+    SRegDebugDeletedSubKey,
+    SRegDebugDeletedParentKey,
+    SRegDebugError,
+    SRegDebugValue,
+    SRegDebugType,
+    SRegDebugData
+  );
+var
+  LabelText: string;
+  i: Integer;
 begin
   if ARichEdit = nil then
     Exit;
 
-  Key := Format(KeyFormat, ['']);
+  Line := TrimLeft(Msg);
+  if Copy(Line, 1, Length(SRegDebug)) = SRegDebug then
+  begin
+    Delete(Line, 1, Length(SRegDebug));
+    Line := TrimLeft(Line);
+  end;
 
-  RichEdit_SetCaret(ARichEdit);
-  RichEdit_SetSelectionText(ARichEdit, Format('[%s] ', [AppLog_TimeStamp]), [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, Key, [fsBold], clWindowText);
-  RichEdit_SetSelectionText(ARichEdit, Value, [], clWindowText);
-  ARichEdit.SelText := sLineBreak;
-  AppLog_UpdateView(ARichEdit);
+  if Line = '' then
+  begin
+    AppLog_Append(ARichEdit, '', [], clWindowText);
+    Exit;
+  end;
+
+  for i := Low(Labels) to High(Labels) do
+  begin
+    LabelText := Labels[i];
+    if Copy(Line, 1, Length(LabelText)) = LabelText then
+    begin
+      Value := Copy(Line, Length(LabelText) + 1, MaxInt);
+      if LabelText = SRegDebugError then
+        AppLog_AppendDebugKeyValue(ARichEdit, LabelText, Value, clRed, clRed)
+      else
+        AppLog_AppendDebugKeyValue(ARichEdit, LabelText, Value, clWindowText, clWindowText);
+      Exit;
+    end;
+  end;
+
+  AppLog_AppendDebugKeyValue(ARichEdit, '', Line, clWindowText, clWindowText);
 end;
 
-procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const Msg: string);
+procedure AppLog_Debug(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
 begin
-  AppLog_AppendDebug(ARichEdit, Msg);
+  AppLog_AppendDebugKeyValue(ARichEdit, KeyFormat, Value, clWindowText, clWindowText);
 end;
 
 procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const Msg: string);
 begin
-  AppLog_Append(ARichEdit, Msg, [fsBold], clOlive);
+  AppLog_Append(ARichEdit, Msg, [], clOlive);
+end;
+
+procedure AppLog_Warn(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+begin
+  AppLog_AppendKeyValue(ARichEdit, KeyFormat, Value, clOlive);
 end;
 
 procedure AppLog_Error(ARichEdit: TCustomRichEdit; const Msg: string);
 begin
-  AppLog_Append(ARichEdit, Msg, [fsBold], clRed);
+  AppLog_Append(ARichEdit, Msg, [], clRed);
+end;
+
+procedure AppLog_Error(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+begin
+  AppLog_AppendKeyValue(ARichEdit, KeyFormat, Value, clRed);
 end;
 
 procedure AppLog_Success(ARichEdit: TCustomRichEdit; const Msg: string);
 begin
-  AppLog_Append(ARichEdit, Msg, [fsBold], clGreen);
+  AppLog_Append(ARichEdit, Msg, [], clGreen);
+end;
+
+procedure AppLog_Success(ARichEdit: TCustomRichEdit; const KeyFormat, Value: string); overload;
+begin
+  AppLog_AppendKeyValue(ARichEdit, KeyFormat, Value, clGreen);
 end;
 
 end.

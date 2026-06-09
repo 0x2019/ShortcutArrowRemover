@@ -1,4 +1,4 @@
-unit uAppDebug;
+﻿unit uAppDebug;
 
 interface
 
@@ -22,7 +22,7 @@ begin
 
   if IsRegDebugEnabled then
   begin
-    AppLog_Info(F.redLog, RegDebugPath(ErrorState.Root, ErrorState.Path));
+    AppLog_Debug(F.redLog, RegDebugPath(ErrorState.Root, ErrorState.Path));
 
     if ErrorState.ErrorCode <> 0 then
       AppLog_Debug(F.redLog, SRegDebugError + Format('%s (Error code: %d)', [ErrorState.ErrorMessage, ErrorState.ErrorCode]))
@@ -31,19 +31,21 @@ begin
   end
   else
   begin
+    AppLog_Info(F.redLog, SRegDebugPath, StringReplace(RegDebugPath(ErrorState.Root, ErrorState.Path), SRegDebug + ' ' + SRegDebugPath, '', []));
+
     if ErrorState.ErrorCode <> 0 then
     begin
       if ReadError then
         AppLog_Warn(F.redLog, Format('%s (Error code: %d)', [ErrorState.ErrorMessage, ErrorState.ErrorCode]))
       else
-        AppLog_Error(F.redLog, SRegDebugError + Format('%s (Error code: %d)', [ErrorState.ErrorMessage, ErrorState.ErrorCode]));
+        AppLog_Error(F.redLog, SRegDebugError, Format('%s (Error code: %d)', [ErrorState.ErrorMessage, ErrorState.ErrorCode]));
     end
     else
     begin
       if ReadError then
         AppLog_Warn(F.redLog, ErrorState.ErrorMessage)
       else
-        AppLog_Error(F.redLog, SRegDebugError + ErrorState.ErrorMessage);
+        AppLog_Error(F.redLog, SRegDebugError, ErrorState.ErrorMessage);
     end;
   end;
 end;
@@ -54,7 +56,7 @@ begin
     SetRegDebugLogProc(
       procedure(const Msg: string)
       begin
-        AppLog_Info(F.redLog, Msg);
+        AppLog_Debug(F.redLog, Msg);
       end
     )
   else
