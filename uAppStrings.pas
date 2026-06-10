@@ -9,6 +9,7 @@ resourcestring
   APP_URL                             = 'https://github.com/0x2019/ShortcutArrowRemover';
 
   SLogOSVersion                       = 'OS: %s';
+  SLogLocale                          = 'Locale: %s';
 
   SRestartExplorerMsg                 = 'Do you want to restart Windows Explorer?';
 

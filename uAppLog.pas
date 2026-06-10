@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, System.SysUtils, Vcl.ComCtrls, Vcl.Graphics,
-  uRichEdit;
+
+  uOSUtils, uRichEdit;
 
 procedure AppLog_Init(ARichEdit: TCustomRichEdit);
 
@@ -103,6 +104,7 @@ begin
     ARichEdit.Clear;
     AppLog_Append(ARichEdit, APP_NAME + ' ' + APP_VERSION, [fsBold], clWindowText);
     AppLog_Info(ARichEdit, SLogOSVersion, TOSVersion.ToString);
+    AppLog_Info(ARichEdit, SLogLocale, GetCurrentLocale);
   finally
     ARichEdit.Lines.EndUpdate;
   end;
