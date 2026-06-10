@@ -6,7 +6,7 @@ object frmMain: TfrmMain
   BorderStyle = bsSingle
   Caption = 'Shortcut Arrow Remover'
   ClientHeight = 281
-  ClientWidth = 600
+  ClientWidth = 690
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object frmMain: TfrmMain
   OnKeyDown = FormKeyDown
   TextHeight = 13
   object btnRestartExplorer: TsBitBtn
-    Left = 286
+    Left = 375
     Top = 255
     Width = 142
     Height = 25
@@ -39,7 +39,7 @@ object frmMain: TfrmMain
     Tag = 99
     Left = 0
     Top = 5
-    Width = 600
+    Width = 689
     Height = 52
     TabOrder = 0
     object chkRSS: TsCheckBox
@@ -76,7 +76,7 @@ object frmMain: TfrmMain
     end
   end
   object btnExit: TsBitBtn
-    Left = 520
+    Left = 609
     Top = 255
     Width = 80
     Height = 25
@@ -91,7 +91,7 @@ object frmMain: TfrmMain
     SkinData.SkinSection = 'TOOLBUTTON'
   end
   object btnAbout: TsBitBtn
-    Left = 434
+    Left = 523
     Top = 255
     Width = 80
     Height = 25
@@ -108,7 +108,7 @@ object frmMain: TfrmMain
   object redLog: TsRichEdit
     Left = 0
     Top = 63
-    Width = 600
+    Width = 689
     Height = 186
     Cursor = crArrow
     Color = clWhite
