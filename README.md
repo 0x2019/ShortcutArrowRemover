@@ -12,7 +12,7 @@ Shortcut Arrow Remover - A simple utility to remove or restore the shortcut arro
 English
 
 ## 📷 Screenshot
-![Shortcut Arrow Remover Screenshot](https://i.imgur.com/7SsWeJY.png)
+![Shortcut Arrow Remover Screenshot](https://i.imgur.com/0UZxmRV.png)
 
 ## 📥 Download
 [Windows](https://github.com/0x2019/ShortcutArrowRemover/releases)
