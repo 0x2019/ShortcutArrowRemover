@@ -34,6 +34,7 @@ const
   SRegDebug                           = '[DEBUG]';
   SRegDebugPath                       = 'Path: ';
   SRegDebugCreatedKey                 = 'Created key: ';
+  SRegDebugCreatedSubKey              = 'Created subkey: ';
   SRegDebugCreatedValue               = 'Created value: ';
   SRegDebugUpdatedValue               = 'Updated value: ';
   SRegDebugDeletedValue               = 'Deleted value: ';
