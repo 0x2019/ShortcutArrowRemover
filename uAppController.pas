@@ -14,8 +14,6 @@ procedure AppController_RestartExplorerTimer(F: TfrmMain);
 
 procedure AppController_About(F: TfrmMain);
 procedure AppController_Exit(F: TfrmMain);
-
-procedure AppController_ToggleDebug(F: TfrmMain);
 procedure AppController_ToggleShortcutArrows(F: TfrmMain);
 procedure AppController_ToggleShortcutSuffix(F: TfrmMain);
 
@@ -44,10 +42,11 @@ begin
   if F = nil then Exit;
 
   AppSettings_Load(F);
-  SetRegDebugEnabled(F.chkDebug.Checked);
+  UI_SetAlwaysOnTop(F, F.pmiAlwaysOnTop.Checked);
+  SetRegDebugEnabled(F.pmiDebug.Checked);
   AppDebug_UpdateHandlers(F);
   AppLog_Init(F.redLog);
-  AppController_Debug(F, SDebugMode, F.chkDebug.Checked, False);
+  AppController_Debug(F, SDebugMode, F.pmiDebug.Checked, False);
   AppController_LoadTweaks(F);
 end;
 
@@ -166,15 +165,6 @@ procedure AppController_Exit(F: TfrmMain);
 begin
   if F = nil then Exit;
   F.Close;
-end;
-
-procedure AppController_ToggleDebug(F: TfrmMain);
-begin
-  if F = nil then Exit;
-  SetRegDebugEnabled(F.chkDebug.Checked);
-  AppDebug_UpdateHandlers(F);
-  AppSettings_Save(F);
-  AppController_Debug(F, SDebugMode, F.chkDebug.Checked);
 end;
 
 procedure AppController_ToggleShortcutArrows(F: TfrmMain);

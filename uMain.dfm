@@ -14,6 +14,7 @@ object frmMain: TfrmMain
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
+  PopupMenu = pmPopup
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
@@ -84,7 +85,7 @@ object frmMain: TfrmMain
     Images = sCharImageList
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 5
+    TabOrder = 2
     TabStop = False
     OnClick = btnExitClick
     SkinData.SkinSection = 'TOOLBUTTON'
@@ -119,20 +120,11 @@ object frmMain: TfrmMain
     Font.Style = []
     ParentFont = False
     ParentShowHint = False
-    PopupMenu = pmPopup
+    PopupMenu = pmLog
     ReadOnly = True
     ScrollBars = ssVertical
     ShowHint = False
     TabOrder = 1
-  end
-  object chkDebug: TsCheckBox
-    Left = 8
-    Top = 258
-    Width = 62
-    Height = 17
-    Caption = '&Debug'
-    TabOrder = 2
-    OnClick = chkDebugClick
   end
   object sSkinProvider: TsSkinProvider
     ShowAppIcon = False
@@ -14318,9 +14310,9 @@ object frmMain: TfrmMain
     Top = 111
     Bitmap = {}
   end
-  object pmPopup: TPopupMenu
+  object pmLog: TPopupMenu
     Images = sMenuImageList
-    OnPopup = pmPopupPopup
+    OnPopup = pmLogPopup
     Left = 365
     Top = 127
     object pmiCopy: TMenuItem
@@ -14386,5 +14378,23 @@ object frmMain: TfrmMain
     Options = [fdoOverWritePrompt, fdoPathMustExist]
     Left = 320
     Top = 117
+  end
+  object pmPopup: TPopupMenu
+    Left = 424
+    Top = 128
+    object pmiAlwaysOnTop: TMenuItem
+      AutoCheck = True
+      Caption = '&Always On Top'
+      Checked = True
+      OnClick = pmiAlwaysOnTopClick
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object pmiDebug: TMenuItem
+      AutoCheck = True
+      Caption = '&Debug'
+      OnClick = pmiDebugClick
+    end
   end
 end

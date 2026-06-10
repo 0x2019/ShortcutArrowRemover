@@ -20,7 +20,8 @@ begin
 
   Ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'), TEncoding.UTF8);
   try
-    F.chkDebug.Checked := Ini.ReadBool('Main', 'Debug', False);
+    F.pmiAlwaysOnTop.Checked := Ini.ReadBool('Main', 'AlwaysOnTop', True);
+    F.pmiDebug.Checked := Ini.ReadBool('Main', 'Debug', False);
 
     F.FLogPath := Ini.ReadString('Log', 'Path', '');
     if F.FLogPath <> '' then
@@ -41,7 +42,8 @@ begin
 
   Ini := TMemIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'), TEncoding.UTF8);
   try
-    Ini.WriteBool('Main', 'Debug', F.chkDebug.Checked);
+    Ini.WriteBool('Main', 'AlwaysOnTop', F.pmiAlwaysOnTop.Checked);
+    Ini.WriteBool('Main', 'Debug', F.pmiDebug.Checked);
 
     Ini.WriteString('Log', 'Path', ExcludeTrailingPathDelimiter(NormalizePath(F.FLogPath)));
     Ini.UpdateFile;

@@ -25,13 +25,16 @@ type
     tmrRestartExplorer: TTimer;
     sCharImageList: TsCharImageList;
     redLog: TsRichEdit;
-    chkDebug: TsCheckBox;
-    pmPopup: TPopupMenu;
+    pmLog: TPopupMenu;
     pmiCopy: TMenuItem;
     pmiSelectAll: TMenuItem;
     pmiSaveLog: TMenuItem;
     sMenuImageList: TsCharImageList;
     SaveFileDlg: TFileSaveDialog;
+    pmPopup: TPopupMenu;
+    pmiDebug: TMenuItem;
+    pmiAlwaysOnTop: TMenuItem;
+    N2: TMenuItem;
     procedure btnAboutClick(Sender: TObject);
     procedure btnExitClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -41,8 +44,9 @@ type
     procedure tmrRestartExplorerTimer(Sender: TObject);
     procedure chkRSAClick(Sender: TObject);
     procedure chkRSSClick(Sender: TObject);
-    procedure chkDebugClick(Sender: TObject);
-    procedure pmPopupPopup(Sender: TObject);
+    procedure pmiDebugClick(Sender: TObject);
+    procedure pmiAlwaysOnTopClick(Sender: TObject);
+    procedure pmLogPopup(Sender: TObject);
     procedure pmiCopyClick(Sender: TObject);
     procedure pmiSelectAllClick(Sender: TObject);
     procedure pmiSaveLogClick(Sender: TObject);
@@ -93,17 +97,20 @@ begin
   AppController_ToggleShortcutSuffix(Self);
 end;
 
-procedure TfrmMain.chkDebugClick(Sender: TObject);
+procedure TfrmMain.pmiDebugClick(Sender: TObject);
 begin
-  AppController_ToggleDebug(Self);
+  AppMenu_Popup_Debug(Self);
+end;
+
+procedure TfrmMain.pmiAlwaysOnTopClick(Sender: TObject);
+begin
+  AppMenu_Popup_AlwaysOnTop(Self);
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   UI_SetMinConstraints(Self);
   UI_EnableDragForm(Self);
-  UI_SetAlwaysOnTop(Self, True);
-
   AppController_Init(Self);
   AppMenu_Popup_Init(Self);
 end;
@@ -121,7 +128,7 @@ begin
   AppController_Exit(Self);
 end;
 
-procedure TfrmMain.pmPopupPopup(Sender: TObject);
+procedure TfrmMain.pmLogPopup(Sender: TObject);
 var
   Items: TPopupItems;
 begin
