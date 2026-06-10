@@ -80,7 +80,7 @@ begin
     IsRestartingExplorer := True;
     F.tmrRestartExplorer.Tag := WaitTerminate;
 
-    AppLog_Info(F.redLog, SLogExplorerRestarting);
+    AppLog_Info(F.redLog, SLogExplorerRestarting, '');
 
     State := F.tmrRestartExplorer.Tag;
     Event := Explorer_RestartProcess(State);
@@ -89,9 +89,9 @@ begin
     if Event < 0 then
     begin
       if Event = ErrRestartTerminate then
-        AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]))
+        AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]), '')
       else
-        AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]));
+        AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]), '');
 
       IsRestartingExplorer := False;
       F.tmrRestartExplorer.Tag := State;
@@ -101,7 +101,7 @@ begin
     end;
 
     for i := Low(PIDs) to High(PIDs) do
-      AppLog_Info(F.redLog, Format(SLogExplorerTerminated, [ProcessName, PIDs[i]]));
+      AppLog_Info(F.redLog, Format(SLogExplorerTerminated, [ProcessName, PIDs[i]]), '');
 
     F.tmrRestartExplorer.Interval := 1000;
     F.tmrRestartExplorer.Enabled := True;
@@ -128,9 +128,9 @@ begin
   if Event < 0 then
   begin
     if Event = ErrRestartTerminate then
-      AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]))
+      AppLog_Error(F.redLog, Format(SLogExplorerFailedToTerminate, [ErrorCode]), '')
     else
-      AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]));
+      AppLog_Error(F.redLog, Format(SLogExplorerFailedToStart, [ErrorCode]), '');
 
     IsRestartingExplorer := False;
     F.tmrRestartExplorer.Enabled := False;
@@ -142,12 +142,12 @@ begin
     EvtRestartStarted:
     begin
       if Length(PIDs) > 0 then
-        AppLog_Info(F.redLog, Format(SLogExplorerStarted, [ProcessName, PIDs[0]]));
+        AppLog_Info(F.redLog, Format(SLogExplorerStarted, [ProcessName, PIDs[0]]), '');
     end;
 
     EvtRestartCompleted:
     begin
-      AppLog_Success(F.redLog, SLogExplorerRestartCompleted);
+      AppLog_Success(F.redLog, SLogExplorerRestartCompleted, '');
       IsRestartingExplorer := False;
       F.tmrRestartExplorer.Enabled := False;
       F.btnRestartExplorer.Enabled := True;
