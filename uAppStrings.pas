@@ -4,8 +4,8 @@ interface
 
 resourcestring
   APP_NAME                            = 'Shortcut Arrow Remover';
-  APP_VERSION                         = 'v1.0.0.0';
-  APP_RELEASE                         = 'September 19, 2025';
+  APP_VERSION                         = 'v1.0.0.1';
+  APP_RELEASE                         = 'June 10, 2026';
   APP_URL                             = 'https://github.com/0x2019/ShortcutArrowRemover';
 
   SLogOSVersion                       = 'OS: %s';

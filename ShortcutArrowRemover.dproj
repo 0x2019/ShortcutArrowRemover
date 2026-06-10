@@ -120,10 +120,11 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <AppExecutionLevel>requireAdministrator</AppExecutionLevel>
         <Icon_MainIcon>ShortcutArrowRemover_Icon.ico</Icon_MainIcon>
-        <VerInfo_Keys>CompanyName=;FileDescription=Shortcut Arrow Remover;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=Shortcut Arrow Remover;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=Shortcut Arrow Remover;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=Shortcut Arrow Remover;ProductVersion=1.0.0.1;Comments=</VerInfo_Keys>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
         <DCC_UnitSearchPath>..\Common;..\Common\About;..\Common\uFMOD;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Build>1</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
