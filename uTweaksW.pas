@@ -26,7 +26,7 @@ const
     'WSHFile'
   );
   ROOT2 = HKEY_LOCAL_MACHINE;
-  PATH2 = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons';
+  PATH2 = 'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons';
   VALUE2 = '29';
   DATA2 = '%WINDIR%\System32\shell32.dll,-50';
 var
