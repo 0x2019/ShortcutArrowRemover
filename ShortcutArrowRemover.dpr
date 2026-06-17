@@ -20,6 +20,7 @@ uses
   uMenu.Popup in '..\Common\uMenu.Popup.pas',
   uMessageBox in '..\Common\uMessageBox.pas',
   uOSUtils in '..\Common\uOSUtils.pas',
+  uRichEdit.Log in '..\Common\uRichEdit.Log.pas',
   uRichEdit in '..\Common\uRichEdit.pas',
   uRegUtils in '..\Common\uRegUtils.pas',
   uMetaballs in '..\Common\About\uMetaballs.pas';

@@ -156,6 +156,7 @@
         <DCCReference Include="..\Common\uMenu.Popup.pas"/>
         <DCCReference Include="..\Common\uMessageBox.pas"/>
         <DCCReference Include="..\Common\uOSUtils.pas"/>
+        <DCCReference Include="..\Common\uRichEdit.Log.pas"/>
         <DCCReference Include="..\Common\uRichEdit.pas"/>
         <DCCReference Include="..\Common\uRegUtils.pas"/>
         <DCCReference Include="..\Common\About\uMetaballs.pas"/>
